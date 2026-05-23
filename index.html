@@ -3,664 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PULSE // Multi-Dashboard Ecosystem v3</title>
+    <title>PULSE OS // Aesthetic Athlete System v5</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-dark: #030712;
-            --card-surface: #0b1121;
-            --inner-surface: #131b31;
-            --accent-neon: #38bdf8;
-            --accent-gain: #a855f7;
-            --accent-success: #10b981;
-            --accent-error: #f43f5e;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: #1e293b;
+            --bg-base: #030712;
+            --surface-card: #0b1329;
+            --surface-inner: #111c3a;
+            --neon-blue: #38bdf8;
+            --neon-purple: #c084fc;
+            --neon-green: #34d399;
+            --neon-rose: #fb7185;
+            --neon-amber: #fbbf24;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-line: #1e293b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: var(--text-secondary); 
+            background-color: var(--bg-base); 
+            color: var(--text-muted); 
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            -webkit-font-smoothing: antialiased;
         }
-        
-        /* Persistent App Navigation Header Bar Layout */
+
+        /* Fixed Navigation Header Blueprint */
         header {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            border-bottom: 1px solid var(--border-glow);
-            padding: 16px 24px;
+            background: linear-gradient(180deg, #090f20 0%, #030712 100%);
+            border-bottom: 1px solid var(--border-line);
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 10;
         }
-
-        .header-logo-group { display: flex; align-items: center; gap: 10px; }
-        .header-logo-group h1 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: var(--text-primary); font-weight: 700; }
+        .logo-group { display: flex; align-items: center; gap: 8px; }
+        .logo-group h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: var(--text-main); font-weight: 700; letter-spacing: 0.5px; }
         
-        /* Mobile Main Viewport Layout Configurations */
-        .app-viewport {
+        /* Optimized Mobile Scroll Viewport */
+        .viewport {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
-            padding-bottom: 90px;
+            padding: 16px;
+            padding-bottom: 95px; /* Clean breathing room for navigation bar overlay */
+        }
+        .view-panel { display: none; }
+        .view-panel.active-view { display: block; }
+
+        /* Structural Design System Elements */
+        .glass-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-line);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; color: var(--text-main); font-weight: 700; margin-bottom: 12px; }
+        p { font-size: 13px; line-height: 1.6; }
+        .hidden { display: none !important; }
+
+        /* Responsive UI Grids Layout */
+        .flex-row-wrap { display: flex; flex-direction: column; gap: 16px; }
+        @media (min-width: 600px) {
+            .flex-row-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         }
 
-        .dashboard-view-panel { display: none; }
-        .dashboard-view-panel.active-view { display: block; }
-
-        /* Premium Visual Cards Structure Design Components */
-        .ui-card {
-            background: var(--card-surface);
-            border: 1px solid var(--border-glow);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; color: var(--text-primary); font-weight: 700; margin-bottom: 15px; }
-        p { font-size: 14px; line-height: 1.5; }
-
-        /* Responsive Component Grid Matrices Layout Layouts */
-        .grid-twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-split-view { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
-
-        /* Functional Form Elements Control Rules Styles */
-        .input-wrapper { display: flex; flex-direction: column; margin-bottom: 16px; }
-        .input-wrapper label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-primary); margin-bottom: 8px; }
+        /* Micro Inputs Utility Controls Styling */
+        .input-group { display: flex; flex-direction: column; margin-bottom: 12px; }
+        .input-group label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-main); margin-bottom: 6px; }
         input, select {
-            width: 100%; padding: 12px 16px; border: 1px solid var(--border-glow); border-radius: 12px;
-            background-color: var(--inner-surface); color: var(--text-primary); font-size: 14px; transition: all 0.2s ease;
+            width: 100%; padding: 10px 14px; border: 1px solid var(--border-line); border-radius: 10px;
+            background-color: var(--surface-inner); color: var(--text-main); font-size: 13px; transition: border 0.2s;
         }
-        input:focus, select:focus { outline: none; border-color: var(--accent-neon); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        input:focus, select:focus { outline: none; border-color: var(--neon-blue); }
 
-        /* Custom Adaptive Interactive Buttons Rules Elements */
+        /* Unified Action Button Hierarchy Modules */
         button {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none;
-            padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
+            padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
             font-family: 'Space Grotesk', sans-serif; transition: all 0.2s ease; width: 100%;
         }
-        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); }
-        .btn-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .btn-danger { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); }
-        .btn-secondary { background: var(--inner-surface); border: 1px solid var(--border-glow); color: var(--text-primary); }
-        .btn-secondary:hover { background: var(--border-glow); }
+        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+        .btn-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .btn-rose { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); }
+        .btn-amber { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); }
+        .btn-dark { background: var(--surface-inner); border: 1px solid var(--border-line); color: var(--text-main); }
 
-        /* Profile Selection Listing Cards Blocks Components */
-        .profile-list-item {
-            background: var(--inner-surface); border: 1px solid var(--border-glow); border-radius: 16px;
-            padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .profile-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; margin-left: 8px; }
-        .badge-gain { background: rgba(168,85,247,0.2); color: #c084fc; }
-        .badge-lose { background: rgba(56,189,248,0.2); color: #38bdf8; }
+        /* Quick Metric Strips Dashboard Components */
+        .metric-badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; text-align: center; }
+        .metric-badge-box { background: var(--surface-inner); padding: 10px 4px; border-radius: 12px; border: 1px solid var(--border-line); }
+        .metric-badge-box span { display: block; font-size: 8px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+        .metric-badge-box strong { font-size: 14px; color: var(--text-main); }
 
-        /* Metrics Tracker Displays Layout Blocks */
-        .metric-row-strip {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: rgba(3,7,18,0.5);
-            padding: 14px; border-radius: 16px; border: 1px solid var(--border-glow); text-align: center; margin-bottom: 20px;
-        }
-        .metric-row-strip div span { display: block; font-size: 9px; font-weight: 700; text-transform: uppercase; }
-        .metric-row-strip div strong { font-size: 16px; color: var(--text-primary); font-weight: 800; }
+        /* Culinary Card Module Layouts */
+        .recipe-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 768px) { .recipe-grid { grid-template-columns: 1fr 1fr; } }
+        .recipe-card { background: var(--surface-inner); border: 1px solid var(--border-line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; }
+        .recipe-card:hover { transform: translateY(-2px); }
+        .recipe-thumb { height: 120px; background-size: cover; background-position: center; position: relative; background-color: #1e293b; display: flex; align-items: center; justify-content: center; }
+        .recipe-badge-overlay { position: absolute; top: 12px; right: 12px; font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 8px; text-transform: uppercase; color: #fff; }
+        .recipe-meta-row { display: flex; gap: 12px; font-size: 11px; margin: 6px 0 12px 0; color: var(--text-muted); }
 
-        ul { list-style: none; max-height: 120px; overflow-y: auto; margin-top: 10px; }
-        li { background: var(--inner-surface); border: 1px solid var(--border-glow); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; display: flex; justify-content: space-between; color: var(--text-primary); }
+        /* Dynamic System Lists */
+        ul { list-style: none; margin-top: 8px; max-height: 100px; overflow-y: auto; }
+        li { background: var(--surface-inner); border: 1px solid var(--border-line); padding: 6px 10px; border-radius: 8px; margin-bottom: 4px; font-size: 12px; display: flex; justify-content: space-between; color: var(--text-main); }
 
-        /* Bottom Persistent Navigation Bar System */
+        /* Persistent Navigation Control Bar Frame */
         nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: #070a13; border-top: 1px solid var(--border-glow);
-            display: flex; justify-content: space-around; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+            position: fixed; bottom: 0; left: 0; right: 0; background: #050914; border-top: 1px solid var(--border-line);
+            display: flex; justify-content: space-around; z-index: 100;
         }
-        .nav-link-tab {
-            background: none; border: none; flex: 1; padding: 16px 0; font-size: 12px; font-weight: 600;
-            color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; border-top: 3px solid transparent; width: auto; box-shadow: none;
+        .nav-tab {
+            background: none; border: none; flex: 1; padding: 14px 0; font-size: 10px; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; transition: all 0.2s; border-top: 3px solid transparent; width: auto; box-shadow: none;
         }
-        .nav-link-tab.active-tab { color: var(--accent-neon); border-top-color: var(--accent-neon); background: rgba(56,189,248,0.02); }
+        .nav-tab.active-tab { color: var(--neon-blue); border-top-color: var(--neon-blue); background: rgba(56,189,248,0.02); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-logo-group">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            <h1>PULSE OS</h1>
+        <div class="logo-group">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <h1>PULSE // ENGINE v5</h1>
         </div>
         <div>
-            <span style="font-size:12px; font-weight:700; color:var(--text-primary); background:var(--inner-surface); padding: 6px 12px; border-radius: 20px; border:1px solid var(--border-glow);">
-                📆 Day #<span id="currentDayCounterDisplay">1</span>
+            <span style="font-size:11px; font-weight:700; color:var(--text-main); background:var(--surface-inner); padding: 4px 10px; border-radius: 12px; border:1px solid var(--border-line);">
+                Day Tracker <span id="displayTrackingDayNum">1</span>
             </span>
         </div>
     </header>
 
-    <div class="app-viewport">
+    <div class="viewport">
         
-        <div id="view-tracker" class="dashboard-view-panel active-view">
-            <div id="noActiveProfileWarning" class="ui-card" style="text-align: center; border-color: var(--accent-error);">
-                <h4>⚠️ No Active Athlete Profile Configured</h4>
-                <p style="margin-bottom: 15px;">You must initialize or choose a profile from the Profile Command tab to unlock tracking modules.</p>
-                <button type="button" onclick="switchActiveViewTab('profiles')" style="width:auto; padding:10px 20px;">Open Profile Center</button>
+        <div id="panel-tracker" class="view-panel active-view">
+            <div id="fallbackUserBanner" class="glass-card" style="text-align: center; border-color: var(--neon-rose);">
+                <h4>⚠️ No Active Athlete Found</h4>
+                <p style="margin-bottom: 12px;">Initialize your physical goals in the Profile Registry tab to unlock tracking metrics.</p>
+                <button type="button" onclick="navigateTabRouter('profiles')" style="width:auto; padding:8px 16px;">Go to Profile Registry</button>
             </div>
 
-            <div id="activeTrackerCoreLayout" class="hidden">
-                <div class="grid-twocol" style="margin-bottom: 20px;">
-                    <div class="ui-card" style="margin-bottom: 0; border-left: 4px solid var(--accent-neon);">
-                        <span style="font-size:10px; font-weight:700; display:block;">CURRENT ACTIVE ATHLETE</span>
-                        <h3 id="displayActiveName" style="margin: 4px 0 0 0; font-size:24px; color:var(--accent-neon);">None</h3>
+            <div id="primaryTrackerWorkspace" class="hidden">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div class="glass-card" style="margin-bottom: 0; padding: 14px; border-left: 3px solid var(--neon-blue);">
+                        <span style="font-size: 9px; font-weight: 700; display: block; letter-spacing: 0.5px;">ACTIVE USER</span>
+                        <h3 id="lblActiveAthleteName" style="margin: 2px 0 0 0; font-size: 18px; color: var(--neon-blue);">None</h3>
                     </div>
-                    <div class="ui-card" style="margin-bottom: 0; border-left: 4px solid var(--accent-success);">
-                        <span style="font-size:10px; font-weight:700; display:block;">DAILY ALLOCATION BASE TARGET</span>
-                        <h3 style="margin: 4px 0 0 0; font-size:24px;"><span id="displayBaseTargetCal">0</span> <span style="font-size:12px; font-weight:400; color:var(--text-secondary);">kcal</span></h3>
+                    <div class="glass-card" style="margin-bottom: 0; padding: 14px; border-left: 3px solid var(--neon-green);">
+                        <span style="font-size: 9px; font-weight: 700; display: block; letter-spacing: 0.5px;">METRIC GOAL</span>
+                        <h3 id="lblActiveAthleteGoal" style="margin: 2px 0 0 0; font-size: 18px; color: var(--neon-green); text-transform: capitalize;">None</h3>
                     </div>
                 </div>
 
-                <div class="grid-split-view">
-                    <div style="display: flex; flex-direction: column; gap: 20px;">
-                        <div class="ui-card" style="display:flex; flex-direction:column; align-items:center; min-height:260px; justify-content:center;">
-                            <h4 style="align-self:flex-start; font-size:12px; color:var(--text-secondary);">REAL-TIME BALANCING ENERGY PROGRESS RING</h4>
-                            <div style="position:relative; width:180px; height:180px;">
-                                <canvas id="canvasDonutTrackerRing"></canvas>
+                <div class="flex-row-wrap">
+                    <div>
+                        <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; min-height: 200px; justify-content: center;">
+                            <h4 style="align-self: flex-start; font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Calorie Performance Ring</h4>
+                            <div style="position: relative; width: 130px; height: 130px; margin-top: 5px;">
+                                <canvas id="chartDonutProgressBuffer"></canvas>
                             </div>
                         </div>
 
-                        <div class="ui-card" style="border-color: #2e1852; background: linear-gradient(180deg, var(--card-surface) 0%, #0d081a 100%);">
-                            <h4>🏁 Day Cycle Synchronization</h4>
-                            <p style="margin-bottom: 15px; color:var(--text-secondary);">Ready to lock in today's metrics? Archiving saves data to log records, wipes trackers clean, and advances your tracking timeline.</p>
-                            <button type="button" class="btn-success" onclick="advanceToNextDayCycleEngine()" style="background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);">Archive & Move to Next Day</button>
+                        <div class="glass-card" style="border-left: 3px solid #60a5fa; background: linear-gradient(135deg, var(--surface-card) 0%, #09152e 100%);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <div>
+                                    <h4 style="margin:0; font-size:14px;">💧 Hydro Intake Log</h4>
+                                    <p style="font-size:11px; color:var(--text-muted);">Target: 3,000 ml daily</p>
+                                </div>
+                                <div style="text-align:right;"><span id="lblWaterIntakeQty" style="font-size:18px; font-weight:800; color:var(--text-main);">0</span> <span style="font-size:11px;">ml</span></div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                <button type="button" class="btn-dark" onclick="modifyWaterIntakeRegistry(250)" style="padding:8px; font-size:11px;">+250ml Glass</button>
+                                <button type="button" class="btn-dark" onclick="modifyWaterIntakeRegistry(500)" style="padding:8px; font-size:11px;">+500ml Bottle</button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card" style="border-left: 3px solid var(--neon-purple); background: linear-gradient(135deg, var(--surface-card) 0%, #150e2b 100%);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <div>
+                                    <h4 style="margin:0; font-size:14px;">🌙 Rest Sleep Tracker</h4>
+                                    <p style="font-size:11px; color:var(--text-muted);">Monitor circadian rest windows</p>
+                                </div>
+                                <div style="text-align:right;"><span id="lblSleepDurationQty" style="font-size:18px; font-weight:800; color:var(--neon-purple);">0.0</span> <span style="font-size:11px;">hrs</span></div>
+                            </div>
+                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px;">
+                                <input type="number" step="0.5" id="numSleepLogVal" placeholder="Hours rested" style="padding:8px;">
+                                <button type="button" onclick="commitRestSleepDurationValue()" style="padding:8px; font-size:11px;">Log</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 20px;">
-                        <div class="metric-row-strip">
-                            <div><span>Target</span><strong id="stripTarget">0</strong></div>
-                            <div><span>Food</span><strong id="stripFood" style="color:var(--accent-error);">0</strong></div>
-                            <div><span>Burn</span><strong id="stripBurn" style="color:var(--accent-neon);">0</strong></div>
-                            <div><span>Net</span><strong id="stripNet" style="color:var(--accent-success);">0</strong></div>
+                    <div>
+                        <div class="metric-badge-grid">
+                            <div class="metric-badge-box"><span>Target</span><strong id="lblStatGridTarget">0</strong></div>
+                            <div class="metric-badge-box"><span>Food</span><strong id="lblStatGridFood" style="color:var(--neon-rose);">0</strong></div>
+                            <div class="metric-badge-box"><span>Burn</span><strong id="lblStatGridBurn" style="color:var(--neon-blue);">0</strong></div>
+                            <div class="metric-badge-box"><span>Net</span><strong id="lblStatGridNet" style="color:var(--neon-green);">0</strong></div>
                         </div>
 
-                        <div class="ui-card" style="background:rgba(56,189,248,0.02); padding:16px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                <h4 style="font-size:12px; margin:0;">📱 Mobile Steps Feed</h4>
-                                <span style="font-size:13px; font-weight:700;"><span id="stepCounterNode">0</span> / 10k</span>
+                        <div class="glass-card" style="padding:14px; background:rgba(56,189,248,0.01);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <h4 style="font-size:12px; margin:0;">👟 Step Sensor Feed</h4>
+                                <span style="font-size:12px; font-weight:700; color:var(--text-main);"><span id="lblPedometerDisplay">0</span> / 10k steps</span>
                             </div>
-                            <button type="button" class="btn-secondary" id="actionSimulateSteps" style="padding:8px; font-size:12px;">Sync +2,500 Steps Walked</button>
+                            <button type="button" class="btn-dark" id="btnSimulateStepsRow" style="padding:6px; font-size:11px;">Simulate Walk Activity (+2.5k steps)</button>
                         </div>
 
-                        <div class="ui-card" style="padding:18px;">
-                            <h4 style="font-size:13px; margin-bottom:10px;">🍽️ Log Food Entry</h4>
-                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px; margin-bottom:8px;">
-                                <input type="text" id="foodLabelInput" placeholder="Item name...">
-                                <input type="number" id="foodKcalInput" placeholder="Kcal">
+                        <div class="glass-card" style="padding:14px;">
+                            <h4 style="font-size:12px; margin-bottom:8px;">🍽️ Record Food Log</h4>
+                            <div style="display:grid; grid-template-columns: 3fr 2fr; gap:6px; margin-bottom:6px;">
+                                <input type="text" id="txtFoodInputLabel" placeholder="e.g., Grilled Chicken" style="padding:8px;">
+                                <input type="number" id="numFoodInputKcal" placeholder="Calories" style="padding:8px;">
                             </div>
-                            <button type="button" class="btn-success" onclick="logDietaryItemAction()" style="padding:10px; font-size:12px;">Log Entry</button>
-                            <ul id="renderedFoodLogsDisplayNode"></ul>
+                            <button type="button" class="btn-green" onclick="commitDietaryItemAction()" style="padding:8px; font-size:11px;">Add Item</button>
+                            <ul id="listFoodLogsDisplay"></ul>
                         </div>
 
-                        <div class="ui-card" style="padding:18px;">
-                            <h4 style="font-size:13px; margin-bottom:10px;">🏋️ Log Active Workout</h4>
-                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px; margin-bottom:8px;">
-                                <input type="text" id="workoutLabelInput" placeholder="e.g., Weights">
-                                <input type="number" id="workoutKcalInput" placeholder="Burn">
+                        <div class="glass-card" style="padding:14px;">
+                            <h4 style="font-size:12px; margin-bottom:8px;">🏋️ Record Workout Activity</h4>
+                            <div style="display:grid; grid-template-columns: 3fr 2fr; gap:6px; margin-bottom:6px;">
+                                <input type="text" id="txtWorkoutInputLabel" placeholder="e.g., Heavy Squats" style="padding:8px;">
+                                <input type="number" id="numWorkoutInputKcal" placeholder="Burn" style="padding:8px;">
                             </div>
-                            <button type="button" onclick="logWorkoutSessionAction()" style="padding:10px; font-size:12px;">Commit Session</button>
-                            <ul id="renderedWorkoutLogsDisplayNode"></ul>
+                            <button type="button" onclick="commitWorkoutSessionAction()" style="padding:8px; font-size:11px;">Log Workout</button>
+                            <ul id="listWorkoutLogsDisplay"></ul>
                         </div>
+
+                        <div class="glass-card" style="border: 1px dashed var(--neon-purple); background:rgba(192,132,252,0.01); margin-bottom:0;">
+                            <h4 style="font-size:13px;">🔒 Close Daily Performance Loop</h4>
+                            <p style="margin-bottom:12px; font-size:11px; color:var(--text-muted);">Processes your stats against your profile goal, generates an automated rating, and clears the tracking boards for tomorrow.</p>
+                            <button type="button" class="btn-green" onclick="processDayClosingAutomationPipeline()" style="background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%);">Archive & Calculate Score</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-profiles" class="dashboard-view-panel">
-            <div class="grid-split-view">
-                <div class="ui-card">
-                    <h2>Initialize Athlete Profile</h2>
-                    <form id="profileCreationForm">
-                        <div class="input-wrapper"><label>Full Name / Moniker</label><input type="text" id="profName" required placeholder="Alex Mercer"></div>
-                        <div class="grid-twocol">
-                            <div class="input-wrapper"><label>Objective Target Goal</label><select id="profGoal"><option value="gain">Surplus (Muscle Gain)</option><option value="lose">Deficit (Weight Loss)</option></select></div>
-                            <div class="input-wrapper"><label>Biological Profile</label><select id="profGender"><option value="male">Male</option><option value="female">Female</option></select></div>
+        <div id="panel-kitchen" class="view-panel">
+            <div class="glass-card">
+                <h2>Aesthetic Kitchen Recommendations</h2>
+                <p style="margin-bottom: 16px; font-size: 12px;">Dynamic meal strategies generated based on your active target macro strategy track profile.</p>
+                
+                <div class="recipe-grid" id="containerRecipesDynamicGrid">
+                    </div>
+            </div>
+        </div>
+
+        <div id="panel-profiles" class="view-panel">
+            <div class="flex-row-wrap">
+                <div class="glass-card">
+                    <h2>Create Profile Matrix</h2>
+                    <form id="formProfileInitializationEngine">
+                        <div class="input-group"><label>Moniker / Athlete Identifier</label><input type="text" id="cfgName" required placeholder="Enter name"></div>
+                        <div class="input-group"><label>Target Strategy Track</label><select id="cfgGoal"><option value="lose">Weight Deficit (Fat Loss Mode)</option><option value="gain">Weight Surplus (Hypertrophy Mode)</option></select></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div class="input-group"><label>Age (Years)</label><input type="number" id="cfgAge" required placeholder="24"></div>
+                            <div class="input-group"><label>Biological Sex</label><select id="cfgGender"><option value="male">Male</option><option value="female">Female</option></select></div>
                         </div>
-                        <div class="grid-twocol">
-                            <div class="input-wrapper"><label>Age (Years)</label><input type="number" id="profAge" required placeholder="25"></div>
-                            <div class="input-wrapper"><label>Height (CM)</label><input type="number" id="profHeight" required placeholder="175"></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div class="input-group"><label>Height (CM)</label><input type="number" id="cfgHeight" required placeholder="180"></div>
+                            <div class="input-group"><label>Weight (KG)</label><input type="number" id="cfgWeight" required placeholder="78"></div>
                         </div>
-                        <div class="grid-twocol">
-                            <div class="input-wrapper"><label>Weight (KG)</label><input type="number" id="profWeight" required placeholder="70"></div>
-                            <div class="input-wrapper"><label>Weight Delta Target (KG)</label><input type="number" id="profDelta" required placeholder="5"></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div class="input-group"><label>Weight Target Shift (KG)</label><input type="number" id="cfgDelta" required placeholder="6"></div>
+                            <div class="input-group"><label>Timeline Term (Weeks)</label><input type="number" id="cfgWeeks" required placeholder="12"></div>
                         </div>
-                        <div class="input-wrapper"><label>Target Timeline Duration (Weeks)</label><input type="number" id="profWeeks" required placeholder="8"></div>
-                        <button type="submit" class="btn-success">Deploy Athlete Profile</button>
+                        <button type="submit" class="btn-green" style="margin-top:4px;">Initialize Profile</button>
                     </form>
                 </div>
 
-                <div>
-                    <div class="ui-card">
-                        <h2>System Registry Database</h2>
-                        <p style="margin-bottom: 15px; font-size:13px; color:var(--text-secondary);">Select the active profile path mapping or delete records permanently from browser storage.</p>
-                        <div id="profilesRegistryMasterDisplayContainer"></div>
-                    </div>
+                <div class="glass-card">
+                    <h2>Active Profile Databases</h2>
+                    <p style="margin-bottom:12px; font-size:12px;">Toggle active user pathways or clear metrics allocations database files from device registry blocks.</p>
+                    <div id="deckProfilesRegistryContainer"></div>
                 </div>
             </div>
         </div>
 
-        <div id="view-analytics" class="dashboard-view-panel">
-            <div class="ui-card">
-                <h2>Historical Performance Ledger</h2>
-                <p style="margin-bottom: 20px;">Displays complete energy performance records across finalized calendar tracking windows.</p>
-                <div style="position:relative; width:100%; height:260px;">
-                    <canvas id="canvasHistoricalBarChartNode"></canvas>
+        <div id="panel-analytics" class="view-panel">
+            <div class="glass-card">
+                <h2>Performance Analytics Ledger</h2>
+                <p style="margin-bottom:16px; font-size:12px;">Historic calibration models capturing food energy patterns against dynamic operational budgets.</p>
+                <div style="position:relative; width:100%; height:220px;">
+                    <canvas id="chartHistoricalTimelineNode"></canvas>
                 </div>
             </div>
-            <div class="ui-card">
-                <h4>Data Registry Log Clearout</h4>
-                <p style="margin-bottom:15px;">Wipe all profile matrices databases and historic entries from browser storage engines.</p>
-                <button type="button" class="btn-danger" onclick="purgeAllSystemLocalStorageData()" style="width:auto;">Reset App Database</button>
+            
+            <div class="glass-card">
+                <h2>Day Closing Ledger Scoreboard</h2>
+                <p style="margin-bottom:12px; font-size:12px;">Your recent historical cycle scores tracking how well your metabolic output aligns with your target goal:</p>
+                <div id="scoreboardGradingLogsDisplayContainer"></div>
+            </div>
+
+            <div class="glass-card" style="border-color: rgba(244,63,94,0.2);">
+                <h4>Master Database Cleansing</h4>
+                <p style="margin-bottom:12px; font-size:11px;">Purge all local cache layers, storage matrices, histories, and athlete listings from application sandbox environments.</p>
+                <button type="button" class="btn-rose" onclick="purgeSystemSandboxCacheStorage()" style="width:auto; padding:10px 16px;">Format System Memory</button>
             </div>
         </div>
 
     </div>
 
     <nav>
-        <button type="button" class="nav-link-tab active-tab" onclick="switchActiveViewTab('tracker', this)">Fitness Tracker</button>
-        <button type="button" class="nav-link-tab" onclick="switchActiveViewTab('profiles', this)">Profile Center</button>
-        <button type="button" class="nav-link-tab" onclick="switchActiveViewTab('analytics', this)">Data Analytics</button>
-    </nav>
-
-    <script>
-        // System Global State Storage Objects Variables Initialization Matrices Loop
-        let systemApplicationStateInstance = {
-            profiles: [],
-            activeProfileId: null,
-            currentTrackingDay: 1,
-            dailyTrackers: { steps: 0, food: [], workouts: [] },
-            historicalArchiveLogs: []
-        };
-
-        // Graph instances handles pointers reference structures
-        let chartInstanceDonutTracker = null;
-        let chartInstanceHistoricalBar = null;
-
-        // Core App Window Initialization Event Listeners Hooks
-        window.addEventListener('DOMContentLoaded', () => {
-            loadApplicationStateFromStorageEngine();
-            renderProfilesRegistryInterfaceComponents();
-            evaluateActiveTrackingModuleViewStates();
-            initializeVisualChartsComponentsPipelines();
-            document.getElementById('currentDayCounterDisplay').innerText = systemApplicationStateInstance.currentTrackingDay;
-        });
-
-        function saveApplicationStateToStorageEngine() {
-            localStorage.setItem('PULSE_OS_STATE_DATA_V3', JSON.stringify(systemApplicationStateInstance));
-        }
-
-        function loadApplicationStateFromStorageEngine() {
-            const rawStoredPayload = localStorage.getItem('PULSE_OS_STATE_DATA_V3');
-            if (rawStoredPayload) {
-                try {
-                    systemApplicationStateInstance = JSON.parse(rawStoredPayload);
-                } catch(e) {
-                    console.error("Storage corrupt, formatting environment structures configurations.");
-                }
-            }
-        }
-
-        // Dashboard Route View Router Navigation Controllers Loops
-        function switchActiveViewTab(viewTargetId, clickedButtonElement = null) {
-            document.querySelectorAll('.dashboard-view-panel').forEach(panel => panel.classList.remove('active-view'));
-            document.querySelectorAll('.nav-link-tab').forEach(tab => tab.classList.remove('active-tab'));
-
-            document.getElementById(`view-${viewTargetId}`).classList.add('active-view');
-            
-            if (clickedButtonElement) {
-                clickedButtonElement.classList.add('active-tab');
-            } else {
-                // Handle matching button highlighting when routed via functions
-                const tabs = document.querySelectorAll('.nav-link-tab');
-                if(viewTargetId === 'profiles') tabs[1].classList.add('active-tab');
-                if(viewTargetId === 'tracker') tabs[0].classList.add('active-tab');
-            }
-
-            // Lazy update rendering re-calculation updates charts dimensions viewport corrections
-            if(viewTargetId === 'tracker') executeLiveBudgetCalculationsPipeline();
-            if(viewTargetId === 'analytics') renderHistoricalPerformanceAnalyticsCharts();
-        }
-
-        function evaluateActiveTrackingModuleViewStates() {
-            const warnCard = document.getElementById('noActiveProfileWarning');
-            const coreCard = document.getElementById('activeTrackerCoreLayout');
-
-            if (systemApplicationStateInstance.activeProfileId !== null) {
-                warnCard.classList.add('hidden');
-                coreCard.classList.remove('hidden');
-                
-                const activeProfileObj = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
-                if (activeProfileObj) {
-                    document.getElementById('displayActiveName').innerText = activeProfileObj.name;
-                    document.getElementById('displayBaseTargetCal').innerText = activeProfileObj.calculatedBaseAllocationKcal;
-                    renderDailyListItemsLogsDOMNodes();
-                }
-            } else {
-                warnCard.classList.remove('hidden');
-                coreCard.classList.add('hidden');
-            }
-        }
-
-        // Profiles Management Logic Engine Handlers Pipeline Loops Functions
-        document.getElementById('profileCreationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const newProfileObject = {
-                id: Date.now(),
-                name: document.getElementById('profName').value.trim(),
-                goal: document.getElementById('profGoal').value,
-                gender: document.getElementById('profGender').value,
-                age: parseInt(document.getElementById('profAge').value),
-                height: parseFloat(document.getElementById('profHeight').value),
-                weight: parseFloat(document.getElementById('profWeight').value),
-                delta: parseFloat(document.getElementById('profDelta').value),
-                weeks: parseInt(document.getElementById('profWeeks').value),
-                calculatedBaseAllocationKcal: 0
-            };
-
-            // Mifflin-St Jeor Equation calculations logic implementation block
-            let bmr = (10 * newProfileObject.weight) + (6.25 * newProfileObject.height) - (5 * newProfileObject.age);
-            bmr += (newProfileObject.gender === 'male') ? 5 : -161;
-            const tdeeBase = bmr * 1.375;
-
-            const deltaKcalDailyModifier = Math.round((newProfileObject.delta * 7700) / (newProfileObject.weeks * 7));
-            
-            if (newProfileObject.goal === 'gain') {
-                newProfileObject.calculatedBaseAllocationKcal = Math.round(tdeeBase + deltaKcalDailyModifier);
-            } else {
-                newProfileObject.calculatedBaseAllocationKcal = Math.round(tdeeBase - deltaKcalDailyModifier);
-            }
-
-            // Safety floor limits enforcement check limits boundaries loops
-            const floorLimitValue = newProfileObject.gender === 'male' ? 1500 : 1200;
-            if (newProfileObject.calculatedBaseAllocationKcal < floorLimitValue) newProfileObject.calculatedBaseAllocationKcal = floorLimitValue;
-
-            systemApplicationStateInstance.profiles.push(newProfileObject);
-            // Auto-activate freshly deployed profiles arrays indexes paths maps mappings
-            systemApplicationStateInstance.activeProfileId = newProfileObject.id;
-
-            saveApplicationStateToStorageEngine();
-            renderProfilesRegistryInterfaceComponents();
-            evaluateActiveTrackingModuleViewStates();
-            
-            this.reset();
-            switchActiveViewTab('tracker');
-        });
-
-        function renderProfilesRegistryInterfaceComponents() {
-            const container = document.getElementById('profilesRegistryMasterDisplayContainer');
-            container.innerHTML = "";
-
-            if (systemApplicationStateInstance.profiles.length === 0) {
-                container.innerHTML = `<p style="font-size:13px; color:var(--text-secondary); text-align:center; padding:20px;">No athlete profiles inside registry hardware database.</p>`;
-                return;
-            }
-
-            systemApplicationStateInstance.profiles.forEach(profile => {
-                const isSelectedActive = (profile.id === systemApplicationStateInstance.activeProfileId);
-                const borderHighlightStyle = isSelectedActive ? 'border-color: var(--accent-neon); background: rgba(56,189,248,0.03);' : '';
-                
-                const profileCardNode = document.createElement('div');
-                profileCardNode.className = "profile-list-item";
-                profileCardNode.style.cssText = borderHighlightStyle;
-
-                const goalBadgeMarkup = profile.goal === 'gain' ? `<span class="profile-badge badge-gain">Surplus</span>` : `<span class="profile-badge badge-lose">Deficit</span>`;
-
-                profileCardNode.innerHTML = `
-                    <div>
-                        <strong style="color:var(--text-primary); font-size:15px;">${profile.name}</strong> ${goalBadgeMarkup}
-                        <div style="font-size:12px; margin-top:4px; color:var(--text-secondary);">Target: ${profile.calculatedBaseAllocationKcal} kcal / day</div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        ${!isSelectedActive ? `<button type="button" class="btn-secondary" onclick="activateProfileDatabasePathIndex(${profile.id})" style="padding:6px 12px; font-size:11px; width:auto;">Activate</button>` : `<span style="color:var(--accent-success); font-size:11px; font-weight:700; align-self:center; margin-right:6px;">ACTIVE</span>`}
-                        <button type="button" class="btn-danger" onclick="deleteProfileDatabaseRecordPath(${profile.id})" style="padding:6px 12px; font-size:11px; width:auto;">Delete</button>
-                    </div>
-                `;
-                container.appendChild(profileCardNode);
-            });
-        }
-
-        function activateProfileDatabasePathIndex(profileId) {
-            systemApplicationStateInstance.activeProfileId = profileId;
-            saveApplicationStateToStorageEngine();
-            renderProfilesRegistryInterfaceComponents();
-            evaluateActiveTrackingModuleViewStates();
-            executeLiveBudgetCalculationsPipeline();
-        }
-
-        function deleteProfileDatabaseRecordPath(profileId) {
-            systemApplicationStateInstance.profiles = systemApplicationStateInstance.profiles.filter(p => p.id !== profileId);
-            if (systemApplicationStateInstance.activeProfileId === profileId) {
-                systemApplicationStateInstance.activeProfileId = null;
-            }
-            saveApplicationStateToStorageEngine();
-            renderProfilesRegistryInterfaceComponents();
-            evaluateActiveTrackingModuleViewStates();
-        }
-
-        // Core Tracking Interface Updates Data Input Operations Routines
-        document.getElementById('actionSimulateSteps').onclick = function() {
-            systemApplicationStateInstance.dailyTrackers.steps += 2500;
-            document.getElementById('stepCounterNode').innerText = systemApplicationStateInstance.dailyTrackers.steps.toLocaleString();
-            saveApplicationStateToStorageEngine();
-            executeLiveBudgetCalculationsPipeline();
-        };
-
-        function logDietaryItemAction() {
-            const labelField = document.getElementById('foodLabelInput');
-            const kcalField = document.getElementById('foodKcalInput');
-            const label = labelField.value.trim();
-            const kcal = parseInt(kcalField.value);
-
-            if(label === "" || isNaN(kcal) || kcal <= 0) return;
-
-            systemApplicationStateInstance.dailyTrackers.food.push({ id: Date.now(), label, kcal });
-            saveApplicationStateToStorageEngine();
-            renderDailyListItemsLogsDOMNodes();
-            executeLiveBudgetCalculationsPipeline();
-
-            labelField.value = "";
-            kcalField.value = "";
-        }
-
-        function logWorkoutSessionAction() {
-            const labelField = document.getElementById('workoutLabelInput');
-            const kcalField = document.getElementById('workoutKcalInput');
-            const label = labelField.value.trim();
-            const kcal = parseInt(kcalField.value);
-
-            if(label === "" || isNaN(kcal) || kcal <= 0) return;
-
-            systemApplicationStateInstance.dailyTrackers.workouts.push({ id: Date.now(), label, kcal });
-            saveApplicationStateToStorageEngine();
-            renderDailyListItemsLogsDOMNodes();
-            executeLiveBudgetCalculationsPipeline();
-
-            labelField.value = "";
-            kcalField.value = "";
-        }
-
-        function removeFoodLogItem(itemId, kcal) {
-            systemApplicationStateInstance.dailyTrackers.food = systemApplicationStateInstance.dailyTrackers.food.filter(item => item.id !== itemId);
-            saveApplicationStateToStorageEngine();
-            renderDailyListItemsLogsDOMNodes();
-            executeLiveBudgetCalculationsPipeline();
-        }
-
-        function removeWorkoutLogItem(itemId, kcal) {
-            systemApplicationStateInstance.dailyTrackers.workouts = systemApplicationStateInstance.dailyTrackers.workouts.filter(item => item.id !== itemId);
-            saveApplicationStateToStorageEngine();
-            renderDailyListItemsLogsDOMNodes();
-            executeLiveBudgetCalculationsPipeline();
-        }
-
-        function renderDailyListItemsLogsDOMNodes() {
-            const foodUl = document.getElementById('renderedFoodLogsDisplayNode');
-            foodUl.innerHTML = "";
-            systemApplicationStateInstance.dailyTrackers.food.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span>🥗 ${item.label} (+${item.kcal} kcal)</span><span style="color:var(--accent-error); font-weight:700; cursor:pointer;" onclick="removeFoodLogItem(${item.id}, ${item.kcal})">✕</span>`;
-                foodUl.appendChild(li);
-            });
-
-            const workoutUl = document.getElementById('renderedWorkoutLogsDisplayNode');
-            workoutUl.innerHTML = "";
-            systemApplicationStateInstance.dailyTrackers.workouts.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span>⚡ ${item.label} (-${item.kcal} kcal)</span><span style="color:var(--accent-error); font-weight:700; cursor:pointer;" onclick="removeWorkoutLogItem(${item.id}, ${item.kcal})">✕</span>`;
-                workoutUl.appendChild(li);
-            });
-
-            document.getElementById('stepCounterNode').innerText = systemApplicationStateInstance.dailyTrackers.steps.toLocaleString();
-        }
-
-        // Live Calculations Graphics Architecture Pipeline Updates Engine 
-        function initializeVisualChartsComponentsPipelines() {
-            const ctxDonut = document.getElementById('canvasDonutTrackerRing').getContext('2d');
-            chartInstanceDonutTracker = new Chart(ctxDonut, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Consumed', 'Remaining'],
-                    datasets: [{
-                        data: [0, 2000],
-                        backgroundColor: ['#f43f5e', '#1e293b'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    cutout: '80%'
-                }
-            });
-        }
-
-        function executeLiveBudgetCalculationsPipeline() {
-            if (systemApplicationStateInstance.activeProfileId === null) return;
-
-            const activeProfile = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
-            const baseTarget = activeProfile ? activeProfile.calculatedBaseAllocationKcal : 0;
-
-            const totalFoodIn = systemApplicationStateInstance.dailyTrackers.food.reduce((sum, item) => sum + item.kcal, 0);
-            const workoutBurn = systemApplicationStateInstance.dailyTrackers.workouts.reduce((sum, item) => sum + item.kcal, 0);
-            const stepBurn = Math.round((systemApplicationStateInstance.dailyTrackers.steps / 10000) * 400);
-            const aggregateActivityBurnOut = workoutBurn + stepBurn;
-
-            const adaptedDailyCalorieBudget = baseTarget + aggregateActivityBurnOut;
-            const netBalanceRemainingValue = adaptedDailyCalorieBudget - totalFoodIn;
-
-            // Render text string numeric labels blocks matrices interfaces
-            document.getElementById('stripTarget').innerText = adaptedDailyCalorieBudget.toLocaleString();
-            document.getElementById('stripFood').innerText = totalFoodIn.toLocaleString();
-            document.getElementById('stripBurn').innerText = aggregateActivityBurnOut.toLocaleString();
-            document.getElementById('stripNet').innerText = netBalanceRemainingValue.toLocaleString();
-
-            const netNode = document.getElementById('stripNet');
-            netNode.style.color = netBalanceRemainingValue < 0 ? 'var(--accent-error)' : 'var(--accent-success)';
-
-            // Animate dynamic update ring arrays metrics dataset values logs
-            if (chartInstanceDonutTracker) {
-                const calculatedDoughnutRemainderFillValue = netBalanceRemainingValue > 0 ? netBalanceRemainingValue : 0;
-                chartInstanceDonutTracker.data.datasets[0].data = [totalFoodIn, calculatedDoughnutRemainderFillValue];
-                chartInstanceDonutTracker.update();
-            }
-        }
-
-        // Day Transition Pipeline Logic Engine Handlers 
-        function advanceToNextDayCycleEngine() {
-            if(systemApplicationStateInstance.activeProfileId === null) return;
-
-            const activeProfile = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
-            const baseTarget = activeProfile ? activeProfile.calculatedBaseAllocationKcal : 0;
-
-            const totalFoodIn = systemApplicationStateInstance.dailyTrackers.food.reduce((sum, item) => sum + item.kcal, 0);
-            const workoutBurn = systemApplicationStateInstance.dailyTrackers.workouts.reduce((sum, item) => sum + item.kcal, 0);
-            const stepBurn = Math.round((systemApplicationStateInstance.dailyTrackers.steps / 10000) * 400);
-            const aggregateActivityBurnOut = workoutBurn + stepBurn;
-            const finalNetBalanceBalanceKcal = (baseTarget + aggregateActivityBurnOut) - totalFoodIn;
-
-            // Commit record to history registry archive
-            const dayLogArchiveRecord = {
-                dayNumber: systemApplicationStateInstance.currentTrackingDay,
-                dateTimestampLabel: new Date().toLocaleDateString(undefined, {month:'short', day:'numeric'}),
-                targetAllocation: baseTarget + aggregateActivityBurnOut,
-                foodConsumed: totalFoodIn,
-                activityBurned: aggregateActivityBurnOut,
-                netBalanceRemaining: finalNetBalanceBalanceKcal
-            };
-
-            systemApplicationStateInstance.historicalArchiveLogs.push(dayLogArchiveRecord);
-            
-            // Advance system state parameters scalars loops trackers variables wipes
-            systemApplicationStateInstance.currentTrackingDay += 1;
-            systemApplicationStateInstance.dailyTrackers = { steps: 0, food: [], workouts: [] };
-
-            saveApplicationStateToStorageEngine();
-            document.getElementById('currentDayCounterDisplay').innerText = systemApplicationStateInstance.currentTrackingDay;
-            
-            renderDailyListItemsLogsDOMNodes();
-            executeLiveBudgetCalculationsPipeline();
-
-            alert(`Day #${dayLogArchiveRecord.dayNumber} locked into analytics historical files! Moving to Day #${systemApplicationStateInstance.currentTrackingDay}.`);
-            switchActiveViewTab('analytics');
-        }
-
-        function renderHistoricalPerformanceAnalyticsCharts() {
-            const ctxBar = document.getElementById('canvasHistoricalBarChartNode').getContext('2d');
-            
-            // Map configuration labels coordinates
-            const dataLabels = systemApplicationStateInstance.historicalArchiveLogs.map(log => `Day ${log.dayNumber} (${log.dateTimestampLabel})`);
-            const foodDatasets = systemApplicationStateInstance.historicalArchiveLogs.map(log => log.foodConsumed);
-            const targetDatasets = systemApplicationStateInstance.historicalArchiveLogs.map(log => log.targetAllocation);
-
-            if (chartInstanceHistoricalBar) chartInstanceHistoricalBar.destroy();
-
-            chartInstanceHistoricalBar = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: dataLabels.length > 0 ? dataLabels : ['No History Locked'],
-                    datasets: [
-                        {
-                            label: 'Calories Consumed',
-                            data: foodDatasets.length > 0 ? foodDatasets : [0],
-                            backgroundColor: '#f43f5e', borderRadius: 6
-                        },
-                        {
-                            label: 'Dynamic Target Budget',
-                            data: targetDatasets.length > 0 ? targetDatasets : [0],
-                            backgroundColor: '#38bdf8', borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
-                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 9 } } }
-                    }
-                }
-            });
-        }
-
-        function purgeAllSystemLocalStorageData() {
-            if(confirm("Are you absolutely sure you want to clear out all system profiles and history data? This action cannot be undone.")) {
-                localStorage.removeItem('PULSE_OS_STATE_DATA_V3');
-                location.reload();
-            }
-        }
-    </script>
-</body>
-</html>
+        <button type="button" class="nav-tab active-tab" onclick="navigateTabRouter('tracker', this)">Tracker</button>
+        <button type="button" class="nav-tab" onclick="navigateTabRouter('kitchen', this)">Kitchen</button>
+        <button type="button" class="nav-tab" onclick="navigateTabRouter('profiles', this)">Profiles</button>
+        <button type="button" class="nav-tab" onclick="navigateTabRouter('analytics
