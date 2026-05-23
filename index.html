@@ -3,245 +3,663 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Dashboard App</title>
+    <title>PULSE // Multi-Dashboard Ecosystem v3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --primary: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --bg-dark: #030712;
+            --card-surface: #0b1121;
+            --inner-surface: #131b31;
+            --accent-neon: #38bdf8;
+            --accent-gain: #a855f7;
+            --accent-success: #10b981;
+            --accent-error: #f43f5e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: #1e293b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-secondary); 
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-
-        /* Header Accent */
+        
+        /* Persistent App Navigation Header Bar Layout */
         header {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
         }
 
-        /* Main Content Viewport */
-        .viewport {
+        .header-logo-group { display: flex; align-items: center; gap: 10px; }
+        .header-logo-group h1 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; color: var(--text-primary); font-weight: 700; }
+        
+        /* Mobile Main Viewport Layout Configurations */
+        .app-viewport {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 80px; /* Space for nav bar */
+            padding: 24px;
+            padding-bottom: 90px;
         }
 
-        .dashboard-view {
-            display: none;
+        .dashboard-view-panel { display: none; }
+        .dashboard-view-panel.active-view { display: block; }
+
+        /* Premium Visual Cards Structure Design Components */
+        .ui-card {
+            background: var(--card-surface);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
         }
 
-        .dashboard-view.active {
-            display: block;
+        h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; color: var(--text-primary); font-weight: 700; margin-bottom: 15px; }
+        p { font-size: 14px; line-height: 1.5; }
+
+        /* Responsive Component Grid Matrices Layout Layouts */
+        .grid-twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-split-view { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
+
+        /* Functional Form Elements Control Rules Styles */
+        .input-wrapper { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .input-wrapper label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-primary); margin-bottom: 8px; }
+        input, select {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border-glow); border-radius: 12px;
+            background-color: var(--inner-surface); color: var(--text-primary); font-size: 14px; transition: all 0.2s ease;
         }
+        input:focus, select:focus { outline: none; border-color: var(--accent-neon); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
 
-        /* Dashboard UI Components */
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        /* Custom Adaptive Interactive Buttons Rules Elements */
+        button {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none;
+            padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif; transition: all 0.2s ease; width: 100%;
         }
+        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); }
+        .btn-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .btn-danger { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); }
+        .btn-secondary { background: var(--inner-surface); border: 1px solid var(--border-glow); color: var(--text-primary); }
+        .btn-secondary:hover { background: var(--border-glow); }
 
-        h2 {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: var(--text-main);
+        /* Profile Selection Listing Cards Blocks Components */
+        .profile-list-item {
+            background: var(--inner-surface); border: 1px solid var(--border-glow); border-radius: 16px;
+            padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;
         }
+        .profile-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; margin-left: 8px; }
+        .badge-gain { background: rgba(168,85,247,0.2); color: #c084fc; }
+        .badge-lose { background: rgba(56,189,248,0.2); color: #38bdf8; }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        /* Metrics Tracker Displays Layout Blocks */
+        .metric-row-strip {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: rgba(3,7,18,0.5);
+            padding: 14px; border-radius: 16px; border: 1px solid var(--border-glow); text-align: center; margin-bottom: 20px;
         }
+        .metric-row-strip div span { display: block; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+        .metric-row-strip div strong { font-size: 16px; color: var(--text-primary); font-weight: 800; }
 
-        .stat-box {
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            color: white;
-        }
+        ul { list-style: none; max-height: 120px; overflow-y: auto; margin-top: 10px; }
+        li { background: var(--inner-surface); border: 1px solid var(--border-glow); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; display: flex; justify-content: space-between; color: var(--text-primary); }
 
-        .stat-blue { background: #3b82f6; }
-        .stat-green { background: var(--success); }
-        .stat-orange { background: var(--warning); }
-
-        /* Lists for Tasks */
-        .item-list {
-            list-style: none;
-        }
-
-        .item-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid #eeeeee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-list li:last-child {
-            border-bottom: none;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Bottom Navigation Bar */
+        /* Bottom Persistent Navigation Bar System */
         nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid #e5e7eb;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; right: 0; background: #070a13; border-top: 1px solid var(--border-glow);
+            display: flex; justify-content: space-around; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
         }
-
-        .nav-btn {
-            background: none;
-            border: none;
-            flex: 1;
-            padding: 15px 0;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.2s;
-            font-weight: 500;
+        .nav-link-tab {
+            background: none; border: none; flex: 1; padding: 16px 0; font-size: 12px; font-weight: 600;
+            color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; border-top: 3px solid transparent; width: auto; box-shadow: none;
         }
-
-        .nav-btn.active {
-            color: var(--primary);
-            border-top: 3px solid var(--primary);
-        }
+        .nav-link-tab.active-tab { color: var(--accent-neon); border-top-color: var(--accent-neon); background: rgba(56,189,248,0.02); }
     </style>
 </head>
 <body>
 
-    <header id="app-title">Analytics Dashboard</header>
+    <header>
+        <div class="header-logo-group">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <h1>PULSE OS</h1>
+        </div>
+        <div>
+            <span style="font-size:12px; font-weight:700; color:var(--text-primary); background:var(--inner-surface); padding: 6px 12px; border-radius: 20px; border:1px solid var(--border-glow);">
+                📆 Day #<span id="currentDayCounterDisplay">1</span>
+            </span>
+        </div>
+    </header>
 
-    <div class="viewport">
-        <!-- View 1: Analytics -->
-        <div id="view-analytics" class="dashboard-view active">
-            <div class="card">
-                <h2>Overview Performance</h2>
-                <div class="stat-grid">
-                    <div class="stat-box stat-blue">
-                        <h3>8,432</h3>
-                        <p style="font-size: 0.8rem; opacity: 0.9;">Daily Visitors</p>
+    <div class="app-viewport">
+        
+        <div id="view-tracker" class="dashboard-view-panel active-view">
+            <div id="noActiveProfileWarning" class="ui-card" style="text-align: center; border-color: var(--accent-error);">
+                <h4>⚠️ No Active Athlete Profile Configured</h4>
+                <p style="margin-bottom: 15px;">You must initialize or choose a profile from the Profile Command tab to unlock tracking modules.</p>
+                <button type="button" onclick="switchActiveViewTab('profiles')" style="width:auto; padding:10px 20px;">Open Profile Center</button>
+            </div>
+
+            <div id="activeTrackerCoreLayout" class="hidden">
+                <div class="grid-twocol" style="margin-bottom: 20px;">
+                    <div class="ui-card" style="margin-bottom: 0; border-left: 4px solid var(--accent-neon);">
+                        <span style="font-size:10px; font-weight:700; display:block;">CURRENT ACTIVE ATHLETE</span>
+                        <h3 id="displayActiveName" style="margin: 4px 0 0 0; font-size:24px; color:var(--accent-neon);">None</h3>
                     </div>
-                    <div class="stat-box stat-green">
-                        <h3>+14.2%</h3>
-                        <p style="font-size: 0.8rem; opacity: 0.9;">Conversion</p>
+                    <div class="ui-card" style="margin-bottom: 0; border-left: 4px solid var(--accent-success);">
+                        <span style="font-size:10px; font-weight:700; display:block;">DAILY ALLOCATION BASE TARGET</span>
+                        <h3 style="margin: 4px 0 0 0; font-size:24px;"><span id="displayBaseTargetCal">0</span> <span style="font-size:12px; font-weight:400; color:var(--text-secondary);">kcal</span></h3>
+                    </div>
+                </div>
+
+                <div class="grid-split-view">
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="ui-card" style="display:flex; flex-direction:column; align-items:center; min-height:260px; justify-content:center;">
+                            <h4 style="align-self:flex-start; font-size:12px; color:var(--text-secondary);">REAL-TIME BALANCING ENERGY PROGRESS RING</h4>
+                            <div style="position:relative; width:180px; height:180px;">
+                                <canvas id="canvasDonutTrackerRing"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="ui-card" style="border-color: #2e1852; background: linear-gradient(180deg, var(--card-surface) 0%, #0d081a 100%);">
+                            <h4>🏁 Day Cycle Synchronization</h4>
+                            <p style="margin-bottom: 15px; color:var(--text-secondary);">Ready to lock in today's metrics? Archiving saves data to log records, wipes trackers clean, and advances your tracking timeline.</p>
+                            <button type="button" class="btn-success" onclick="advanceToNextDayCycleEngine()" style="background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);">Archive & Move to Next Day</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="metric-row-strip">
+                            <div><span>Target</span><strong id="stripTarget">0</strong></div>
+                            <div><span>Food</span><strong id="stripFood" style="color:var(--accent-error);">0</strong></div>
+                            <div><span>Burn</span><strong id="stripBurn" style="color:var(--accent-neon);">0</strong></div>
+                            <div><span>Net</span><strong id="stripNet" style="color:var(--accent-success);">0</strong></div>
+                        </div>
+
+                        <div class="ui-card" style="background:rgba(56,189,248,0.02); padding:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <h4 style="font-size:12px; margin:0;">📱 Mobile Steps Feed</h4>
+                                <span style="font-size:13px; font-weight:700;"><span id="stepCounterNode">0</span> / 10k</span>
+                            </div>
+                            <button type="button" class="btn-secondary" id="actionSimulateSteps" style="padding:8px; font-size:12px;">Sync +2,500 Steps Walked</button>
+                        </div>
+
+                        <div class="ui-card" style="padding:18px;">
+                            <h4 style="font-size:13px; margin-bottom:10px;">🍽️ Log Food Entry</h4>
+                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px; margin-bottom:8px;">
+                                <input type="text" id="foodLabelInput" placeholder="Item name...">
+                                <input type="number" id="foodKcalInput" placeholder="Kcal">
+                            </div>
+                            <button type="button" class="btn-success" onclick="logDietaryItemAction()" style="padding:10px; font-size:12px;">Log Entry</button>
+                            <ul id="renderedFoodLogsDisplayNode"></ul>
+                        </div>
+
+                        <div class="ui-card" style="padding:18px;">
+                            <h4 style="font-size:13px; margin-bottom:10px;">🏋️ Log Active Workout</h4>
+                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px; margin-bottom:8px;">
+                                <input type="text" id="workoutLabelInput" placeholder="e.g., Weights">
+                                <input type="number" id="workoutKcalInput" placeholder="Burn">
+                            </div>
+                            <button type="button" onclick="logWorkoutSessionAction()" style="padding:10px; font-size:12px;">Commit Session</button>
+                            <ul id="renderedWorkoutLogsDisplayNode"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <h2>Traffic Sources</h2>
-                <ul class="item-list">
-                    <li><span>Direct Search</span> <strong>45%</strong></li>
-                    <li><span>Social Media</span> <strong>35%</strong></li>
-                    <li><span>Referral Links</span> <strong>20%</strong></li>
-                </ul>
+        </div>
+
+        <div id="view-profiles" class="dashboard-view-panel">
+            <div class="grid-split-view">
+                <div class="ui-card">
+                    <h2>Initialize Athlete Profile</h2>
+                    <form id="profileCreationForm">
+                        <div class="input-wrapper"><label>Full Name / Moniker</label><input type="text" id="profName" required placeholder="Alex Mercer"></div>
+                        <div class="grid-twocol">
+                            <div class="input-wrapper"><label>Objective Target Goal</label><select id="profGoal"><option value="gain">Surplus (Muscle Gain)</option><option value="lose">Deficit (Weight Loss)</option></select></div>
+                            <div class="input-wrapper"><label>Biological Profile</label><select id="profGender"><option value="male">Male</option><option value="female">Female</option></select></div>
+                        </div>
+                        <div class="grid-twocol">
+                            <div class="input-wrapper"><label>Age (Years)</label><input type="number" id="profAge" required placeholder="25"></div>
+                            <div class="input-wrapper"><label>Height (CM)</label><input type="number" id="profHeight" required placeholder="175"></div>
+                        </div>
+                        <div class="grid-twocol">
+                            <div class="input-wrapper"><label>Weight (KG)</label><input type="number" id="profWeight" required placeholder="70"></div>
+                            <div class="input-wrapper"><label>Weight Delta Target (KG)</label><input type="number" id="profDelta" required placeholder="5"></div>
+                        </div>
+                        <div class="input-wrapper"><label>Target Timeline Duration (Weeks)</label><input type="number" id="profWeeks" required placeholder="8"></div>
+                        <button type="submit" class="btn-success">Deploy Athlete Profile</button>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="ui-card">
+                        <h2>System Registry Database</h2>
+                        <p style="margin-bottom: 15px; font-size:13px; color:var(--text-secondary);">Select the active profile path mapping or delete records permanently from browser storage.</p>
+                        <div id="profilesRegistryMasterDisplayContainer"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- View 2: Tasks -->
-        <div id="view-tasks" class="dashboard-view">
-            <div class="card">
-                <h2>Current Sprint Profile</h2>
-                <ul class="item-list">
-                    <li>
-                        <span>Deploy Production Build</span>
-                        <span class="badge" style="background: var(--primary);">High</span>
-                    </li>
-                    <li>
-                        <span>Review UI/UX Feedback</span>
-                        <span class="badge" style="background: var(--warning);">Medium</span>
-                    </li>
-                    <li>
-                        <span>Update Documentation</span>
-                        <span class="badge" style="background: var(--text-muted);">Low</span>
-                    </li>
-                </ul>
+        <div id="view-analytics" class="dashboard-view-panel">
+            <div class="ui-card">
+                <h2>Historical Performance Ledger</h2>
+                <p style="margin-bottom: 20px;">Displays complete energy performance records across finalized calendar tracking windows.</p>
+                <div style="position:relative; width:100%; height:260px;">
+                    <canvas id="canvasHistoricalBarChartNode"></canvas>
+                </div>
+            </div>
+            <div class="ui-card">
+                <h4>Data Registry Log Clearout</h4>
+                <p style="margin-bottom:15px;">Wipe all profile matrices databases and historic entries from browser storage engines.</p>
+                <button type="button" class="btn-danger" onclick="purgeAllSystemLocalStorageData()" style="width:auto;">Reset App Database</button>
             </div>
         </div>
 
-        <!-- View 3: System Status -->
-        <div id="view-system" class="dashboard-view">
-            <div class="card">
-                <h2>Server Integrity</h2>
-                <ul class="item-list">
-                    <li><span>API Gateway</span> <span class="badge" style="background: var(--success);">Operational</span></li>
-                    <li><span>Database Cluster</span> <span class="badge" style="background: var(--success);">Operational</span></li>
-                    <li><span>CDN Caching Layer</span> <span class="badge" style="background: var(--warning);">Degraded</span></li>
-                </ul>
-            </div>
-            <div class="card">
-                <h2>Resource Metrics</h2>
-                <p style="margin-bottom: 8px;">CPU Allocation: <strong>42%</strong></p>
-                <p>Memory Utilization: <strong>68%</strong></p>
-            </div>
-        </div>
     </div>
 
     <nav>
-        <button class="nav-btn active" onclick="switchView('analytics', 'Analytics Dashboard', this)">Analytics</button>
-        <button class="nav-btn" onclick="switchView('tasks', 'Task Management', this)">Tasks</button>
-        <button class="nav-btn" onclick="switchView('system', 'System Health', this)">System</button>
+        <button type="button" class="nav-link-tab active-tab" onclick="switchActiveViewTab('tracker', this)">Fitness Tracker</button>
+        <button type="button" class="nav-link-tab" onclick="switchActiveViewTab('profiles', this)">Profile Center</button>
+        <button type="button" class="nav-link-tab" onclick="switchActiveViewTab('analytics', this)">Data Analytics</button>
     </nav>
 
     <script>
-        function switchView(viewId, title, element) {
-            // Hide all views
-            document.querySelectorAll('.dashboard-view').forEach(view => {
-                view.classList.remove('active');
-            });
+        // System Global State Storage Objects Variables Initialization Matrices Loop
+        let systemApplicationStateInstance = {
+            profiles: [],
+            activeProfileId: null,
+            currentTrackingDay: 1,
+            dailyTrackers: { steps: 0, food: [], workouts: [] },
+            historicalArchiveLogs: []
+        };
+
+        // Graph instances handles pointers reference structures
+        let chartInstanceDonutTracker = null;
+        let chartInstanceHistoricalBar = null;
+
+        // Core App Window Initialization Event Listeners Hooks
+        window.addEventListener('DOMContentLoaded', () => {
+            loadApplicationStateFromStorageEngine();
+            renderProfilesRegistryInterfaceComponents();
+            evaluateActiveTrackingModuleViewStates();
+            initializeVisualChartsComponentsPipelines();
+            document.getElementById('currentDayCounterDisplay').innerText = systemApplicationStateInstance.currentTrackingDay;
+        });
+
+        function saveApplicationStateToStorageEngine() {
+            localStorage.setItem('PULSE_OS_STATE_DATA_V3', JSON.stringify(systemApplicationStateInstance));
+        }
+
+        function loadApplicationStateFromStorageEngine() {
+            const rawStoredPayload = localStorage.getItem('PULSE_OS_STATE_DATA_V3');
+            if (rawStoredPayload) {
+                try {
+                    systemApplicationStateInstance = JSON.parse(rawStoredPayload);
+                } catch(e) {
+                    console.error("Storage corrupt, formatting environment structures configurations.");
+                }
+            }
+        }
+
+        // Dashboard Route View Router Navigation Controllers Loops
+        function switchActiveViewTab(viewTargetId, clickedButtonElement = null) {
+            document.querySelectorAll('.dashboard-view-panel').forEach(panel => panel.classList.remove('active-view'));
+            document.querySelectorAll('.nav-link-tab').forEach(tab => tab.classList.remove('active-tab'));
+
+            document.getElementById(`view-${viewTargetId}`).classList.add('active-view');
             
-            // Remove active style from buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
+            if (clickedButtonElement) {
+                clickedButtonElement.classList.add('active-tab');
+            } else {
+                // Handle matching button highlighting when routed via functions
+                const tabs = document.querySelectorAll('.nav-link-tab');
+                if(viewTargetId === 'profiles') tabs[1].classList.add('active-tab');
+                if(viewTargetId === 'tracker') tabs[0].classList.add('active-tab');
+            }
+
+            // Lazy update rendering re-calculation updates charts dimensions viewport corrections
+            if(viewTargetId === 'tracker') executeLiveBudgetCalculationsPipeline();
+            if(viewTargetId === 'analytics') renderHistoricalPerformanceAnalyticsCharts();
+        }
+
+        function evaluateActiveTrackingModuleViewStates() {
+            const warnCard = document.getElementById('noActiveProfileWarning');
+            const coreCard = document.getElementById('activeTrackerCoreLayout');
+
+            if (systemApplicationStateInstance.activeProfileId !== null) {
+                warnCard.classList.add('hidden');
+                coreCard.classList.remove('hidden');
+                
+                const activeProfileObj = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
+                if (activeProfileObj) {
+                    document.getElementById('displayActiveName').innerText = activeProfileObj.name;
+                    document.getElementById('displayBaseTargetCal').innerText = activeProfileObj.calculatedBaseAllocationKcal;
+                    renderDailyListItemsLogsDOMNodes();
+                }
+            } else {
+                warnCard.classList.remove('hidden');
+                coreCard.classList.add('hidden');
+            }
+        }
+
+        // Profiles Management Logic Engine Handlers Pipeline Loops Functions
+        document.getElementById('profileCreationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const newProfileObject = {
+                id: Date.now(),
+                name: document.getElementById('profName').value.trim(),
+                goal: document.getElementById('profGoal').value,
+                gender: document.getElementById('profGender').value,
+                age: parseInt(document.getElementById('profAge').value),
+                height: parseFloat(document.getElementById('profHeight').value),
+                weight: parseFloat(document.getElementById('profWeight').value),
+                delta: parseFloat(document.getElementById('profDelta').value),
+                weeks: parseInt(document.getElementById('profWeeks').value),
+                calculatedBaseAllocationKcal: 0
+            };
+
+            // Mifflin-St Jeor Equation calculations logic implementation block
+            let bmr = (10 * newProfileObject.weight) + (6.25 * newProfileObject.height) - (5 * newProfileObject.age);
+            bmr += (newProfileObject.gender === 'male') ? 5 : -161;
+            const tdeeBase = bmr * 1.375;
+
+            const deltaKcalDailyModifier = Math.round((newProfileObject.delta * 7700) / (newProfileObject.weeks * 7));
+            
+            if (newProfileObject.goal === 'gain') {
+                newProfileObject.calculatedBaseAllocationKcal = Math.round(tdeeBase + deltaKcalDailyModifier);
+            } else {
+                newProfileObject.calculatedBaseAllocationKcal = Math.round(tdeeBase - deltaKcalDailyModifier);
+            }
+
+            // Safety floor limits enforcement check limits boundaries loops
+            const floorLimitValue = newProfileObject.gender === 'male' ? 1500 : 1200;
+            if (newProfileObject.calculatedBaseAllocationKcal < floorLimitValue) newProfileObject.calculatedBaseAllocationKcal = floorLimitValue;
+
+            systemApplicationStateInstance.profiles.push(newProfileObject);
+            // Auto-activate freshly deployed profiles arrays indexes paths maps mappings
+            systemApplicationStateInstance.activeProfileId = newProfileObject.id;
+
+            saveApplicationStateToStorageEngine();
+            renderProfilesRegistryInterfaceComponents();
+            evaluateActiveTrackingModuleViewStates();
+            
+            this.reset();
+            switchActiveViewTab('tracker');
+        });
+
+        function renderProfilesRegistryInterfaceComponents() {
+            const container = document.getElementById('profilesRegistryMasterDisplayContainer');
+            container.innerHTML = "";
+
+            if (systemApplicationStateInstance.profiles.length === 0) {
+                container.innerHTML = `<p style="font-size:13px; color:var(--text-secondary); text-align:center; padding:20px;">No athlete profiles inside registry hardware database.</p>`;
+                return;
+            }
+
+            systemApplicationStateInstance.profiles.forEach(profile => {
+                const isSelectedActive = (profile.id === systemApplicationStateInstance.activeProfileId);
+                const borderHighlightStyle = isSelectedActive ? 'border-color: var(--accent-neon); background: rgba(56,189,248,0.03);' : '';
+                
+                const profileCardNode = document.createElement('div');
+                profileCardNode.className = "profile-list-item";
+                profileCardNode.style.cssText = borderHighlightStyle;
+
+                const goalBadgeMarkup = profile.goal === 'gain' ? `<span class="profile-badge badge-gain">Surplus</span>` : `<span class="profile-badge badge-lose">Deficit</span>`;
+
+                profileCardNode.innerHTML = `
+                    <div>
+                        <strong style="color:var(--text-primary); font-size:15px;">${profile.name}</strong> ${goalBadgeMarkup}
+                        <div style="font-size:12px; margin-top:4px; color:var(--text-secondary);">Target: ${profile.calculatedBaseAllocationKcal} kcal / day</div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        ${!isSelectedActive ? `<button type="button" class="btn-secondary" onclick="activateProfileDatabasePathIndex(${profile.id})" style="padding:6px 12px; font-size:11px; width:auto;">Activate</button>` : `<span style="color:var(--accent-success); font-size:11px; font-weight:700; align-self:center; margin-right:6px;">ACTIVE</span>`}
+                        <button type="button" class="btn-danger" onclick="deleteProfileDatabaseRecordPath(${profile.id})" style="padding:6px 12px; font-size:11px; width:auto;">Delete</button>
+                    </div>
+                `;
+                container.appendChild(profileCardNode);
+            });
+        }
+
+        function activateProfileDatabasePathIndex(profileId) {
+            systemApplicationStateInstance.activeProfileId = profileId;
+            saveApplicationStateToStorageEngine();
+            renderProfilesRegistryInterfaceComponents();
+            evaluateActiveTrackingModuleViewStates();
+            executeLiveBudgetCalculationsPipeline();
+        }
+
+        function deleteProfileDatabaseRecordPath(profileId) {
+            systemApplicationStateInstance.profiles = systemApplicationStateInstance.profiles.filter(p => p.id !== profileId);
+            if (systemApplicationStateInstance.activeProfileId === profileId) {
+                systemApplicationStateInstance.activeProfileId = null;
+            }
+            saveApplicationStateToStorageEngine();
+            renderProfilesRegistryInterfaceComponents();
+            evaluateActiveTrackingModuleViewStates();
+        }
+
+        // Core Tracking Interface Updates Data Input Operations Routines
+        document.getElementById('actionSimulateSteps').onclick = function() {
+            systemApplicationStateInstance.dailyTrackers.steps += 2500;
+            document.getElementById('stepCounterNode').innerText = systemApplicationStateInstance.dailyTrackers.steps.toLocaleString();
+            saveApplicationStateToStorageEngine();
+            executeLiveBudgetCalculationsPipeline();
+        };
+
+        function logDietaryItemAction() {
+            const labelField = document.getElementById('foodLabelInput');
+            const kcalField = document.getElementById('foodKcalInput');
+            const label = labelField.value.trim();
+            const kcal = parseInt(kcalField.value);
+
+            if(label === "" || isNaN(kcal) || kcal <= 0) return;
+
+            systemApplicationStateInstance.dailyTrackers.food.push({ id: Date.now(), label, kcal });
+            saveApplicationStateToStorageEngine();
+            renderDailyListItemsLogsDOMNodes();
+            executeLiveBudgetCalculationsPipeline();
+
+            labelField.value = "";
+            kcalField.value = "";
+        }
+
+        function logWorkoutSessionAction() {
+            const labelField = document.getElementById('workoutLabelInput');
+            const kcalField = document.getElementById('workoutKcalInput');
+            const label = labelField.value.trim();
+            const kcal = parseInt(kcalField.value);
+
+            if(label === "" || isNaN(kcal) || kcal <= 0) return;
+
+            systemApplicationStateInstance.dailyTrackers.workouts.push({ id: Date.now(), label, kcal });
+            saveApplicationStateToStorageEngine();
+            renderDailyListItemsLogsDOMNodes();
+            executeLiveBudgetCalculationsPipeline();
+
+            labelField.value = "";
+            kcalField.value = "";
+        }
+
+        function removeFoodLogItem(itemId, kcal) {
+            systemApplicationStateInstance.dailyTrackers.food = systemApplicationStateInstance.dailyTrackers.food.filter(item => item.id !== itemId);
+            saveApplicationStateToStorageEngine();
+            renderDailyListItemsLogsDOMNodes();
+            executeLiveBudgetCalculationsPipeline();
+        }
+
+        function removeWorkoutLogItem(itemId, kcal) {
+            systemApplicationStateInstance.dailyTrackers.workouts = systemApplicationStateInstance.dailyTrackers.workouts.filter(item => item.id !== itemId);
+            saveApplicationStateToStorageEngine();
+            renderDailyListItemsLogsDOMNodes();
+            executeLiveBudgetCalculationsPipeline();
+        }
+
+        function renderDailyListItemsLogsDOMNodes() {
+            const foodUl = document.getElementById('renderedFoodLogsDisplayNode');
+            foodUl.innerHTML = "";
+            systemApplicationStateInstance.dailyTrackers.food.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>🥗 ${item.label} (+${item.kcal} kcal)</span><span style="color:var(--accent-error); font-weight:700; cursor:pointer;" onclick="removeFoodLogItem(${item.id}, ${item.kcal})">✕</span>`;
+                foodUl.appendChild(li);
             });
 
-            // Show target view
-            document.getElementById(`view-${viewId}`).classList.add('active');
+            const workoutUl = document.getElementById('renderedWorkoutLogsDisplayNode');
+            workoutUl.innerHTML = "";
+            systemApplicationStateInstance.dailyTrackers.workouts.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>⚡ ${item.label} (-${item.kcal} kcal)</span><span style="color:var(--accent-error); font-weight:700; cursor:pointer;" onclick="removeWorkoutLogItem(${item.id}, ${item.kcal})">✕</span>`;
+                workoutUl.appendChild(li);
+            });
+
+            document.getElementById('stepCounterNode').innerText = systemApplicationStateInstance.dailyTrackers.steps.toLocaleString();
+        }
+
+        // Live Calculations Graphics Architecture Pipeline Updates Engine 
+        function initializeVisualChartsComponentsPipelines() {
+            const ctxDonut = document.getElementById('canvasDonutTrackerRing').getContext('2d');
+            chartInstanceDonutTracker = new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Consumed', 'Remaining'],
+                    datasets: [{
+                        data: [0, 2000],
+                        backgroundColor: ['#f43f5e', '#1e293b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '80%'
+                }
+            });
+        }
+
+        function executeLiveBudgetCalculationsPipeline() {
+            if (systemApplicationStateInstance.activeProfileId === null) return;
+
+            const activeProfile = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
+            const baseTarget = activeProfile ? activeProfile.calculatedBaseAllocationKcal : 0;
+
+            const totalFoodIn = systemApplicationStateInstance.dailyTrackers.food.reduce((sum, item) => sum + item.kcal, 0);
+            const workoutBurn = systemApplicationStateInstance.dailyTrackers.workouts.reduce((sum, item) => sum + item.kcal, 0);
+            const stepBurn = Math.round((systemApplicationStateInstance.dailyTrackers.steps / 10000) * 400);
+            const aggregateActivityBurnOut = workoutBurn + stepBurn;
+
+            const adaptedDailyCalorieBudget = baseTarget + aggregateActivityBurnOut;
+            const netBalanceRemainingValue = adaptedDailyCalorieBudget - totalFoodIn;
+
+            // Render text string numeric labels blocks matrices interfaces
+            document.getElementById('stripTarget').innerText = adaptedDailyCalorieBudget.toLocaleString();
+            document.getElementById('stripFood').innerText = totalFoodIn.toLocaleString();
+            document.getElementById('stripBurn').innerText = aggregateActivityBurnOut.toLocaleString();
+            document.getElementById('stripNet').innerText = netBalanceRemainingValue.toLocaleString();
+
+            const netNode = document.getElementById('stripNet');
+            netNode.style.color = netBalanceRemainingValue < 0 ? 'var(--accent-error)' : 'var(--accent-success)';
+
+            // Animate dynamic update ring arrays metrics dataset values logs
+            if (chartInstanceDonutTracker) {
+                const calculatedDoughnutRemainderFillValue = netBalanceRemainingValue > 0 ? netBalanceRemainingValue : 0;
+                chartInstanceDonutTracker.data.datasets[0].data = [totalFoodIn, calculatedDoughnutRemainderFillValue];
+                chartInstanceDonutTracker.update();
+            }
+        }
+
+        // Day Transition Pipeline Logic Engine Handlers 
+        function advanceToNextDayCycleEngine() {
+            if(systemApplicationStateInstance.activeProfileId === null) return;
+
+            const activeProfile = systemApplicationStateInstance.profiles.find(p => p.id === systemApplicationStateInstance.activeProfileId);
+            const baseTarget = activeProfile ? activeProfile.calculatedBaseAllocationKcal : 0;
+
+            const totalFoodIn = systemApplicationStateInstance.dailyTrackers.food.reduce((sum, item) => sum + item.kcal, 0);
+            const workoutBurn = systemApplicationStateInstance.dailyTrackers.workouts.reduce((sum, item) => sum + item.kcal, 0);
+            const stepBurn = Math.round((systemApplicationStateInstance.dailyTrackers.steps / 10000) * 400);
+            const aggregateActivityBurnOut = workoutBurn + stepBurn;
+            const finalNetBalanceBalanceKcal = (baseTarget + aggregateActivityBurnOut) - totalFoodIn;
+
+            // Commit record to history registry archive
+            const dayLogArchiveRecord = {
+                dayNumber: systemApplicationStateInstance.currentTrackingDay,
+                dateTimestampLabel: new Date().toLocaleDateString(undefined, {month:'short', day:'numeric'}),
+                targetAllocation: baseTarget + aggregateActivityBurnOut,
+                foodConsumed: totalFoodIn,
+                activityBurned: aggregateActivityBurnOut,
+                netBalanceRemaining: finalNetBalanceBalanceKcal
+            };
+
+            systemApplicationStateInstance.historicalArchiveLogs.push(dayLogArchiveRecord);
             
-            // Highlight clicked button
-            element.classList.add('active');
+            // Advance system state parameters scalars loops trackers variables wipes
+            systemApplicationStateInstance.currentTrackingDay += 1;
+            systemApplicationStateInstance.dailyTrackers = { steps: 0, food: [], workouts: [] };
+
+            saveApplicationStateToStorageEngine();
+            document.getElementById('currentDayCounterDisplay').innerText = systemApplicationStateInstance.currentTrackingDay;
             
-            // Change top header title
-            document.getElementById('app-title').innerText = title;
+            renderDailyListItemsLogsDOMNodes();
+            executeLiveBudgetCalculationsPipeline();
+
+            alert(`Day #${dayLogArchiveRecord.dayNumber} locked into analytics historical files! Moving to Day #${systemApplicationStateInstance.currentTrackingDay}.`);
+            switchActiveViewTab('analytics');
+        }
+
+        function renderHistoricalPerformanceAnalyticsCharts() {
+            const ctxBar = document.getElementById('canvasHistoricalBarChartNode').getContext('2d');
+            
+            // Map configuration labels coordinates
+            const dataLabels = systemApplicationStateInstance.historicalArchiveLogs.map(log => `Day ${log.dayNumber} (${log.dateTimestampLabel})`);
+            const foodDatasets = systemApplicationStateInstance.historicalArchiveLogs.map(log => log.foodConsumed);
+            const targetDatasets = systemApplicationStateInstance.historicalArchiveLogs.map(log => log.targetAllocation);
+
+            if (chartInstanceHistoricalBar) chartInstanceHistoricalBar.destroy();
+
+            chartInstanceHistoricalBar = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: dataLabels.length > 0 ? dataLabels : ['No History Locked'],
+                    datasets: [
+                        {
+                            label: 'Calories Consumed',
+                            data: foodDatasets.length > 0 ? foodDatasets : [0],
+                            backgroundColor: '#f43f5e', borderRadius: 6
+                        },
+                        {
+                            label: 'Dynamic Target Budget',
+                            data: targetDatasets.length > 0 ? targetDatasets : [0],
+                            backgroundColor: '#38bdf8', borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        function purgeAllSystemLocalStorageData() {
+            if(confirm("Are you absolutely sure you want to clear out all system profiles and history data? This action cannot be undone.")) {
+                localStorage.removeItem('PULSE_OS_STATE_DATA_V3');
+                location.reload();
+            }
         }
     </script>
 </body>
