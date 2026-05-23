@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Dashboard App</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --primary: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header Accent */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content Viewport */
+        .viewport {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 80px; /* Space for nav bar */
+        }
+
+        .dashboard-view {
+            display: none;
+        }
+
+        .dashboard-view.active {
+            display: block;
+        }
+
+        /* Dashboard UI Components */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-box {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-blue { background: #3b82f6; }
+        .stat-green { background: var(--success); }
+        .stat-orange { background: var(--warning); }
+
+        /* Lists for Tasks */
+        .item-list {
+            list-style: none;
+        }
+
+        .item-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eeeeee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Bottom Navigation Bar */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            flex: 1;
+            padding: 15px 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-top: 3px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <header id="app-title">Analytics Dashboard</header>
+
+    <div class="viewport">
+        <!-- View 1: Analytics -->
+        <div id="view-analytics" class="dashboard-view active">
+            <div class="card">
+                <h2>Overview Performance</h2>
+                <div class="stat-grid">
+                    <div class="stat-box stat-blue">
+                        <h3>8,432</h3>
+                        <p style="font-size: 0.8rem; opacity: 0.9;">Daily Visitors</p>
+                    </div>
+                    <div class="stat-box stat-green">
+                        <h3>+14.2%</h3>
+                        <p style="font-size: 0.8rem; opacity: 0.9;">Conversion</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Traffic Sources</h2>
+                <ul class="item-list">
+                    <li><span>Direct Search</span> <strong>45%</strong></li>
+                    <li><span>Social Media</span> <strong>35%</strong></li>
+                    <li><span>Referral Links</span> <strong>20%</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- View 2: Tasks -->
+        <div id="view-tasks" class="dashboard-view">
+            <div class="card">
+                <h2>Current Sprint Profile</h2>
+                <ul class="item-list">
+                    <li>
+                        <span>Deploy Production Build</span>
+                        <span class="badge" style="background: var(--primary);">High</span>
+                    </li>
+                    <li>
+                        <span>Review UI/UX Feedback</span>
+                        <span class="badge" style="background: var(--warning);">Medium</span>
+                    </li>
+                    <li>
+                        <span>Update Documentation</span>
+                        <span class="badge" style="background: var(--text-muted);">Low</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- View 3: System Status -->
+        <div id="view-system" class="dashboard-view">
+            <div class="card">
+                <h2>Server Integrity</h2>
+                <ul class="item-list">
+                    <li><span>API Gateway</span> <span class="badge" style="background: var(--success);">Operational</span></li>
+                    <li><span>Database Cluster</span> <span class="badge" style="background: var(--success);">Operational</span></li>
+                    <li><span>CDN Caching Layer</span> <span class="badge" style="background: var(--warning);">Degraded</span></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Resource Metrics</h2>
+                <p style="margin-bottom: 8px;">CPU Allocation: <strong>42%</strong></p>
+                <p>Memory Utilization: <strong>68%</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchView('analytics', 'Analytics Dashboard', this)">Analytics</button>
+        <button class="nav-btn" onclick="switchView('tasks', 'Task Management', this)">Tasks</button>
+        <button class="nav-btn" onclick="switchView('system', 'System Health', this)">System</button>
+    </nav>
+
+    <script>
+        function switchView(viewId, title, element) {
+            // Hide all views
+            document.querySelectorAll('.dashboard-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Remove active style from buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show target view
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            
+            // Highlight clicked button
+            element.classList.add('active');
+            
+            // Change top header title
+            document.getElementById('app-title').innerText = title;
+        }
+    </script>
+</body>
+</html>
