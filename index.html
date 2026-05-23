@@ -1,317 +1,1355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PULSE OS // Aesthetic Athlete System v5</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-base: #030712;
-            --surface-card: #0b1329;
-            --surface-inner: #111c3a;
-            --neon-blue: #38bdf8;
-            --neon-purple: #c084fc;
-            --neon-green: #34d399;
-            --neon-rose: #fb7185;
-            --neon-amber: #fbbf24;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-line: #1e293b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PULSE OS</title>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-base); 
-            color: var(--text-muted); 
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* Fixed Navigation Header Blueprint */
-        header {
-            background: linear-gradient(180deg, #090f20 0%, #030712 100%);
-            border-bottom: 1px solid var(--border-line);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 10;
-        }
-        .logo-group { display: flex; align-items: center; gap: 8px; }
-        .logo-group h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: var(--text-main); font-weight: 700; letter-spacing: 0.5px; }
-        
-        /* Optimized Mobile Scroll Viewport */
-        .viewport {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            padding-bottom: 95px; /* Clean breathing room for navigation bar overlay */
-        }
-        .view-panel { display: none; }
-        .view-panel.active-view { display: block; }
+<style>
 
-        /* Structural Design System Elements */
-        .glass-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-line);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-        h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; color: var(--text-main); font-weight: 700; margin-bottom: 12px; }
-        p { font-size: 13px; line-height: 1.6; }
-        .hidden { display: none !important; }
+:root{
+--bg:#0f1115;
+--surface:#171b22;
+--surface2:#1d232d;
+--border:#2a313d;
+--text:#f3f5f7;
+--muted:#98a1af;
+--accent:#d8c2a3;
+--green:#86d39f;
+--red:#ff8f8f;
+--blue:#91b7ff;
+}
 
-        /* Responsive UI Grids Layout */
-        .flex-row-wrap { display: flex; flex-direction: column; gap: 16px; }
-        @media (min-width: 600px) {
-            .flex-row-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:
+"SF Pro Display",
+"Inter",
+"Segoe UI",
+sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
 
-        /* Micro Inputs Utility Controls Styling */
-        .input-group { display: flex; flex-direction: column; margin-bottom: 12px; }
-        .input-group label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-main); margin-bottom: 6px; }
-        input, select {
-            width: 100%; padding: 10px 14px; border: 1px solid var(--border-line); border-radius: 10px;
-            background-color: var(--surface-inner); color: var(--text-main); font-size: 13px; transition: border 0.2s;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--neon-blue); }
+html{
+scroll-behavior:smooth;
+}
 
-        /* Unified Action Button Hierarchy Modules */
-        button {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none;
-            padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif; transition: all 0.2s ease; width: 100%;
-        }
-        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
-        .btn-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .btn-rose { background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); }
-        .btn-amber { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); }
-        .btn-dark { background: var(--surface-inner); border: 1px solid var(--border-line); color: var(--text-main); }
+body{
+background:linear-gradient(180deg,#0f1115,#12161d);
+color:var(--text);
+overflow-x:hidden;
+padding-bottom:120px;
+}
 
-        /* Quick Metric Strips Dashboard Components */
-        .metric-badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; text-align: center; }
-        .metric-badge-box { background: var(--surface-inner); padding: 10px 4px; border-radius: 12px; border: 1px solid var(--border-line); }
-        .metric-badge-box span { display: block; font-size: 8px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-        .metric-badge-box strong { font-size: 14px; color: var(--text-main); }
+.app{
+max-width:480px;
+margin:auto;
+padding:18px;
+}
 
-        /* Culinary Card Module Layouts */
-        .recipe-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 768px) { .recipe-grid { grid-template-columns: 1fr 1fr; } }
-        .recipe-card { background: var(--surface-inner); border: 1px solid var(--border-line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; }
-        .recipe-card:hover { transform: translateY(-2px); }
-        .recipe-thumb { height: 120px; background-size: cover; background-position: center; position: relative; background-color: #1e293b; display: flex; align-items: center; justify-content: center; }
-        .recipe-badge-overlay { position: absolute; top: 12px; right: 12px; font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 8px; text-transform: uppercase; color: #fff; }
-        .recipe-meta-row { display: flex; gap: 12px; font-size: 11px; margin: 6px 0 12px 0; color: var(--text-muted); }
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
 
-        /* Dynamic System Lists */
-        ul { list-style: none; margin-top: 8px; max-height: 100px; overflow-y: auto; }
-        li { background: var(--surface-inner); border: 1px solid var(--border-line); padding: 6px 10px; border-radius: 8px; margin-bottom: 4px; font-size: 12px; display: flex; justify-content: space-between; color: var(--text-main); }
+.logo{
+font-size:24px;
+font-weight:900;
+letter-spacing:-1px;
+}
 
-        /* Persistent Navigation Control Bar Frame */
-        nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: #050914; border-top: 1px solid var(--border-line);
-            display: flex; justify-content: space-around; z-index: 100;
-        }
-        .nav-tab {
-            background: none; border: none; flex: 1; padding: 14px 0; font-size: 10px; font-weight: 600;
-            color: var(--text-muted); cursor: pointer; transition: all 0.2s; border-top: 3px solid transparent; width: auto; box-shadow: none;
-        }
-        .nav-tab.active-tab { color: var(--neon-blue); border-top-color: var(--neon-blue); background: rgba(56,189,248,0.02); }
-    </style>
+.logo span{
+color:var(--accent);
+}
+
+.avatar{
+width:44px;
+height:44px;
+border-radius:16px;
+background:var(--surface2);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:800;
+}
+
+.section{
+display:none;
+animation:fade .25s ease;
+}
+
+.section.active{
+display:block;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:none;
+}
+}
+
+.hero{
+background:linear-gradient(180deg,#1a1f28,#151922);
+padding:24px;
+border-radius:30px;
+border:1px solid var(--border);
+margin-bottom:18px;
+box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+
+.hero small{
+color:var(--muted);
+font-size:12px;
+}
+
+.hero h1{
+font-size:34px;
+font-weight:900;
+margin-top:8px;
+letter-spacing:-1px;
+}
+
+.hero p{
+color:var(--muted);
+margin-top:6px;
+font-size:14px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:18px;
+}
+
+.stat{
+background:var(--surface2);
+padding:14px;
+border-radius:18px;
+text-align:center;
+}
+
+.stat span{
+font-size:12px;
+color:var(--muted);
+}
+
+.stat b{
+display:block;
+margin-top:4px;
+font-size:22px;
+}
+
+.card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:26px;
+padding:18px;
+margin-bottom:14px;
+box-shadow:0 4px 18px rgba(0,0,0,.18);
+}
+
+.card h3{
+font-size:13px;
+color:var(--muted);
+margin-bottom:10px;
+}
+
+.big{
+font-size:30px;
+font-weight:900;
+letter-spacing:-1px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.progress{
+height:16px;
+background:#242b37;
+border-radius:999px;
+overflow:hidden;
+margin-top:14px;
+}
+
+.progress-fill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#90b7ff,#8ce1b0);
+border-radius:999px;
+transition:.4s;
+}
+
+.quick{
+display:flex;
+gap:10px;
+margin-top:14px;
+}
+
+.quick button{
+flex:1;
+background:#232b37;
+border:none;
+border-radius:14px;
+padding:14px;
+color:white;
+font-weight:700;
+}
+
+.btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:16px;
+background:#e7e2d8;
+color:#111317;
+font-weight:800;
+font-size:15px;
+margin-top:10px;
+cursor:pointer;
+transition:.18s;
+}
+
+.btn:active{
+transform:scale(.98);
+}
+
+.input{
+width:100%;
+padding:15px;
+border-radius:16px;
+background:var(--surface2);
+border:1px solid var(--border);
+color:white;
+outline:none;
+margin-bottom:10px;
+font-size:15px;
+}
+
+.row{
+display:flex;
+gap:10px;
+}
+
+.ring-wrap{
+display:flex;
+justify-content:center;
+padding:12px 0;
+}
+
+.ring{
+position:relative;
+width:220px;
+height:220px;
+}
+
+.ring canvas{
+position:absolute;
+inset:0;
+}
+
+.ring-center{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+.ring-center h2{
+font-size:44px;
+font-weight:900;
+}
+
+.ring-center span{
+font-size:13px;
+color:var(--muted);
+}
+
+.bottom-nav{
+position:fixed;
+bottom:14px;
+left:14px;
+right:14px;
+max-width:452px;
+margin:auto;
+display:flex;
+justify-content:space-around;
+padding:14px 0 calc(14px + env(safe-area-inset-bottom));
+background:rgba(22,25,32,.95);
+border:1px solid var(--border);
+border-radius:28px;
+backdrop-filter:blur(18px);
+box-shadow:0 10px 40px rgba(0,0,0,.35);
+z-index:999;
+}
+
+.nav{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+font-size:11px;
+font-weight:700;
+color:#8d96a6;
+cursor:pointer;
+transition:.2s;
+}
+
+.nav.active{
+color:white;
+transform:translateY(-2px);
+}
+
+.section-title{
+font-size:20px;
+font-weight:900;
+margin:20px 0 14px;
+letter-spacing:-.5px;
+}
+
+.recipe-scroll{
+display:flex;
+gap:14px;
+overflow:auto;
+scrollbar-width:none;
+}
+
+.recipe{
+min-width:220px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:24px;
+overflow:hidden;
+}
+
+.recipe img{
+width:100%;
+height:140px;
+object-fit:cover;
+}
+
+.recipe-body{
+padding:14px;
+}
+
+.recipe-body h4{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.pills{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:10px;
+}
+
+.pill{
+background:#232b37;
+padding:6px 10px;
+border-radius:999px;
+font-size:12px;
+}
+
+.list{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:12px;
+}
+
+.item{
+background:var(--surface2);
+padding:14px;
+border-radius:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.item small{
+color:var(--muted);
+}
+
+.empty{
+text-align:center;
+padding:30px 10px;
+color:var(--muted);
+}
+
+.analytics{
+background:var(--surface);
+padding:12px;
+border-radius:24px;
+margin-top:12px;
+border:1px solid var(--border);
+}
+
+.streak{
+margin-top:16px;
+background:var(--surface2);
+padding:14px;
+border-radius:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.streak b{
+font-size:24px;
+}
+
+</style>
 </head>
+
 <body>
 
-    <header>
-        <div class="logo-group">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            <h1>PULSE // ENGINE v5</h1>
-        </div>
-        <div>
-            <span style="font-size:11px; font-weight:700; color:var(--text-main); background:var(--surface-inner); padding: 4px 10px; border-radius: 12px; border:1px solid var(--border-line);">
-                Day Tracker <span id="displayTrackingDayNum">1</span>
-            </span>
-        </div>
-    </header>
+<div class="app">
 
-    <div class="viewport">
-        
-        <div id="panel-tracker" class="view-panel active-view">
-            <div id="fallbackUserBanner" class="glass-card" style="text-align: center; border-color: var(--neon-rose);">
-                <h4>⚠️ No Active Athlete Found</h4>
-                <p style="margin-bottom: 12px;">Initialize your physical goals in the Profile Registry tab to unlock tracking metrics.</p>
-                <button type="button" onclick="navigateTabRouter('profiles')" style="width:auto; padding:8px 16px;">Go to Profile Registry</button>
-            </div>
+<div class="top">
+<div class="logo">PULSE <span>OS</span></div>
+<div class="avatar" id="avatar">+</div>
+</div>
 
-            <div id="primaryTrackerWorkspace" class="hidden">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                    <div class="glass-card" style="margin-bottom: 0; padding: 14px; border-left: 3px solid var(--neon-blue);">
-                        <span style="font-size: 9px; font-weight: 700; display: block; letter-spacing: 0.5px;">ACTIVE USER</span>
-                        <h3 id="lblActiveAthleteName" style="margin: 2px 0 0 0; font-size: 18px; color: var(--neon-blue);">None</h3>
-                    </div>
-                    <div class="glass-card" style="margin-bottom: 0; padding: 14px; border-left: 3px solid var(--neon-green);">
-                        <span style="font-size: 9px; font-weight: 700; display: block; letter-spacing: 0.5px;">METRIC GOAL</span>
-                        <h3 id="lblActiveAthleteGoal" style="margin: 2px 0 0 0; font-size: 18px; color: var(--neon-green); text-transform: capitalize;">None</h3>
-                    </div>
-                </div>
+<!-- DASHBOARD -->
 
-                <div class="flex-row-wrap">
-                    <div>
-                        <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; min-height: 200px; justify-content: center;">
-                            <h4 style="align-self: flex-start; font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Calorie Performance Ring</h4>
-                            <div style="position: relative; width: 130px; height: 130px; margin-top: 5px;">
-                                <canvas id="chartDonutProgressBuffer"></canvas>
-                            </div>
-                        </div>
+<section class="section active" id="dashboard">
 
-                        <div class="glass-card" style="border-left: 3px solid #60a5fa; background: linear-gradient(135deg, var(--surface-card) 0%, #09152e 100%);">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                <div>
-                                    <h4 style="margin:0; font-size:14px;">💧 Hydro Intake Log</h4>
-                                    <p style="font-size:11px; color:var(--text-muted);">Target: 3,000 ml daily</p>
-                                </div>
-                                <div style="text-align:right;"><span id="lblWaterIntakeQty" style="font-size:18px; font-weight:800; color:var(--text-main);">0</span> <span style="font-size:11px;">ml</span></div>
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                                <button type="button" class="btn-dark" onclick="modifyWaterIntakeRegistry(250)" style="padding:8px; font-size:11px;">+250ml Glass</button>
-                                <button type="button" class="btn-dark" onclick="modifyWaterIntakeRegistry(500)" style="padding:8px; font-size:11px;">+500ml Bottle</button>
-                            </div>
-                        </div>
+<div class="hero">
 
-                        <div class="glass-card" style="border-left: 3px solid var(--neon-purple); background: linear-gradient(135deg, var(--surface-card) 0%, #150e2b 100%);">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                                <div>
-                                    <h4 style="margin:0; font-size:14px;">🌙 Rest Sleep Tracker</h4>
-                                    <p style="font-size:11px; color:var(--text-muted);">Monitor circadian rest windows</p>
-                                </div>
-                                <div style="text-align:right;"><span id="lblSleepDurationQty" style="font-size:18px; font-weight:800; color:var(--neon-purple);">0.0</span> <span style="font-size:11px;">hrs</span></div>
-                            </div>
-                            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:6px;">
-                                <input type="number" step="0.5" id="numSleepLogVal" placeholder="Hours rested" style="padding:8px;">
-                                <button type="button" onclick="commitRestSleepDurationValue()" style="padding:8px; font-size:11px;">Log</button>
-                            </div>
-                        </div>
-                    </div>
+<small>ACTIVE PROFILE</small>
 
-                    <div>
-                        <div class="metric-badge-grid">
-                            <div class="metric-badge-box"><span>Target</span><strong id="lblStatGridTarget">0</strong></div>
-                            <div class="metric-badge-box"><span>Food</span><strong id="lblStatGridFood" style="color:var(--neon-rose);">0</strong></div>
-                            <div class="metric-badge-box"><span>Burn</span><strong id="lblStatGridBurn" style="color:var(--neon-blue);">0</strong></div>
-                            <div class="metric-badge-box"><span>Net</span><strong id="lblStatGridNet" style="color:var(--neon-green);">0</strong></div>
-                        </div>
+<h1 id="welcome">New User</h1>
 
-                        <div class="glass-card" style="padding:14px; background:rgba(56,189,248,0.01);">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                <h4 style="font-size:12px; margin:0;">👟 Step Sensor Feed</h4>
-                                <span style="font-size:12px; font-weight:700; color:var(--text-main);"><span id="lblPedometerDisplay">0</span> / 10k steps</span>
-                            </div>
-                            <button type="button" class="btn-dark" id="btnSimulateStepsRow" style="padding:6px; font-size:11px;">Simulate Walk Activity (+2.5k steps)</button>
-                        </div>
+<p id="goalText">
+Create your profile to begin
+</p>
 
-                        <div class="glass-card" style="padding:14px;">
-                            <h4 style="font-size:12px; margin-bottom:8px;">🍽️ Record Food Log</h4>
-                            <div style="display:grid; grid-template-columns: 3fr 2fr; gap:6px; margin-bottom:6px;">
-                                <input type="text" id="txtFoodInputLabel" placeholder="e.g., Grilled Chicken" style="padding:8px;">
-                                <input type="number" id="numFoodInputKcal" placeholder="Calories" style="padding:8px;">
-                            </div>
-                            <button type="button" class="btn-green" onclick="commitDietaryItemAction()" style="padding:8px; font-size:11px;">Add Item</button>
-                            <ul id="listFoodLogsDisplay"></ul>
-                        </div>
+<div class="stats">
 
-                        <div class="glass-card" style="padding:14px;">
-                            <h4 style="font-size:12px; margin-bottom:8px;">🏋️ Record Workout Activity</h4>
-                            <div style="display:grid; grid-template-columns: 3fr 2fr; gap:6px; margin-bottom:6px;">
-                                <input type="text" id="txtWorkoutInputLabel" placeholder="e.g., Heavy Squats" style="padding:8px;">
-                                <input type="number" id="numWorkoutInputKcal" placeholder="Burn" style="padding:8px;">
-                            </div>
-                            <button type="button" onclick="commitWorkoutSessionAction()" style="padding:8px; font-size:11px;">Log Workout</button>
-                            <ul id="listWorkoutLogsDisplay"></ul>
-                        </div>
+<div class="stat">
+<span>Target</span>
+<b id="goalCals">--</b>
+</div>
 
-                        <div class="glass-card" style="border: 1px dashed var(--neon-purple); background:rgba(192,132,252,0.01); margin-bottom:0;">
-                            <h4 style="font-size:13px;">🔒 Close Daily Performance Loop</h4>
-                            <p style="margin-bottom:12px; font-size:11px; color:var(--text-muted);">Processes your stats against your profile goal, generates an automated rating, and clears the tracking boards for tomorrow.</p>
-                            <button type="button" class="btn-green" onclick="processDayClosingAutomationPipeline()" style="background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%);">Archive & Calculate Score</button>
-                        </div>
+<div class="stat">
+<span>Food</span>
+<b id="foodCals">0</b>
+</div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="stat">
+<span>Burn</span>
+<b id="burnCals">0</b>
+</div>
 
-        <div id="panel-kitchen" class="view-panel">
-            <div class="glass-card">
-                <h2>Aesthetic Kitchen Recommendations</h2>
-                <p style="margin-bottom: 16px; font-size: 12px;">Dynamic meal strategies generated based on your active target macro strategy track profile.</p>
-                
-                <div class="recipe-grid" id="containerRecipesDynamicGrid">
-                    </div>
-            </div>
-        </div>
+</div>
 
-        <div id="panel-profiles" class="view-panel">
-            <div class="flex-row-wrap">
-                <div class="glass-card">
-                    <h2>Create Profile Matrix</h2>
-                    <form id="formProfileInitializationEngine">
-                        <div class="input-group"><label>Moniker / Athlete Identifier</label><input type="text" id="cfgName" required placeholder="Enter name"></div>
-                        <div class="input-group"><label>Target Strategy Track</label><select id="cfgGoal"><option value="lose">Weight Deficit (Fat Loss Mode)</option><option value="gain">Weight Surplus (Hypertrophy Mode)</option></select></div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <div class="input-group"><label>Age (Years)</label><input type="number" id="cfgAge" required placeholder="24"></div>
-                            <div class="input-group"><label>Biological Sex</label><select id="cfgGender"><option value="male">Male</option><option value="female">Female</option></select></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <div class="input-group"><label>Height (CM)</label><input type="number" id="cfgHeight" required placeholder="180"></div>
-                            <div class="input-group"><label>Weight (KG)</label><input type="number" id="cfgWeight" required placeholder="78"></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <div class="input-group"><label>Weight Target Shift (KG)</label><input type="number" id="cfgDelta" required placeholder="6"></div>
-                            <div class="input-group"><label>Timeline Term (Weeks)</label><input type="number" id="cfgWeeks" required placeholder="12"></div>
-                        </div>
-                        <button type="submit" class="btn-green" style="margin-top:4px;">Initialize Profile</button>
-                    </form>
-                </div>
+<button class="btn" onclick="endDay()">
+End Day
+</button>
 
-                <div class="glass-card">
-                    <h2>Active Profile Databases</h2>
-                    <p style="margin-bottom:12px; font-size:12px;">Toggle active user pathways or clear metrics allocations database files from device registry blocks.</p>
-                    <div id="deckProfilesRegistryContainer"></div>
-                </div>
-            </div>
-        </div>
+<div class="streak">
+<div>
+<div style="font-size:12px;color:var(--muted)">
+DAY STREAK
+</div>
+<b id="streakVal">0</b>
+</div>
 
-        <div id="panel-analytics" class="view-panel">
-            <div class="glass-card">
-                <h2>Performance Analytics Ledger</h2>
-                <p style="margin-bottom:16px; font-size:12px;">Historic calibration models capturing food energy patterns against dynamic operational budgets.</p>
-                <div style="position:relative; width:100%; height:220px;">
-                    <canvas id="chartHistoricalTimelineNode"></canvas>
-                </div>
-            </div>
-            
-            <div class="glass-card">
-                <h2>Day Closing Ledger Scoreboard</h2>
-                <p style="margin-bottom:12px; font-size:12px;">Your recent historical cycle scores tracking how well your metabolic output aligns with your target goal:</p>
-                <div id="scoreboardGradingLogsDisplayContainer"></div>
-            </div>
+<div style="font-size:13px;color:var(--muted)">
+Consistency builds results
+</div>
+</div>
 
-            <div class="glass-card" style="border-color: rgba(244,63,94,0.2);">
-                <h4>Master Database Cleansing</h4>
-                <p style="margin-bottom:12px; font-size:11px;">Purge all local cache layers, storage matrices, histories, and athlete listings from application sandbox environments.</p>
-                <button type="button" class="btn-rose" onclick="purgeSystemSandboxCacheStorage()" style="width:auto; padding:10px 16px;">Format System Memory</button>
-            </div>
-        </div>
+</div>
 
-    </div>
+<div class="card">
 
-    <nav>
-        <button type="button" class="nav-tab active-tab" onclick="navigateTabRouter('tracker', this)">Tracker</button>
-        <button type="button" class="nav-tab" onclick="navigateTabRouter('kitchen', this)">Kitchen</button>
-        <button type="button" class="nav-tab" onclick="navigateTabRouter('profiles', this)">Profiles</button>
-        <button type="button" class="nav-tab" onclick="navigateTabRouter('analytics
+<h3>CALORIE PERFORMANCE</h3>
+
+<div class="ring-wrap">
+
+<div class="ring">
+
+<canvas id="ringChart"></canvas>
+
+<div class="ring-center">
+<h2 id="ringValue">0</h2>
+<span>Consumed</span>
+</div>
+
+</div>
+
+</div>
+
+<div style="text-align:center;color:var(--muted)">
+<div id="remainingText">
+Build profile to calculate calories
+</div>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Water Intake</h3>
+
+<div class="big">
+<span id="waterText">0</span> ml
+</div>
+
+<div class="progress">
+<div class="progress-fill" id="waterFill"></div>
+</div>
+
+<div class="quick">
+<button onclick="addWater(250)">+250</button>
+<button onclick="addWater(500)">+500</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Steps</h3>
+
+<div class="big" id="stepsText">0</div>
+
+<div style="margin-top:8px;color:var(--muted);font-size:13px">
+Burned:
+<span id="stepBurn">0</span> kcal
+</div>
+
+<button class="btn" onclick="addSteps()">
++100 Steps
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Sleep</h3>
+
+<div class="big">
+<span id="sleepText">0</span> hrs
+</div>
+
+<input class="input" type="number" id="sleepInput" placeholder="Hours slept">
+
+<button class="btn" onclick="saveSleep()">
+Save Sleep
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Weight</h3>
+
+<div class="big">
+<span id="weightText">--</span> kg
+</div>
+
+<input class="input" type="number" id="weightInput" placeholder="Update weight">
+
+<button class="btn" onclick="updateWeight()">
+Update
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- FOOD -->
+
+<section class="section" id="nutrition">
+
+<div class="section-title">
+Food Logger
+</div>
+
+<select class="input" id="mealType">
+<option>Breakfast</option>
+<option>Lunch</option>
+<option>Dinner</option>
+<option>Snacks</option>
+</select>
+
+<div class="row">
+
+<input class="input" id="foodName" placeholder="Food name">
+
+<input class="input" id="foodCal" type="number" placeholder="Calories">
+
+</div>
+
+<button class="btn" onclick="addFood()">
+Add Food
+</button>
+
+<div class="list" id="foodList"></div>
+
+<div class="section-title">
+Indian Recipes
+</div>
+
+<div class="recipe-scroll">
+
+<div class="recipe">
+<img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1200&auto=format&fit=crop">
+<div class="recipe-body">
+<h4>Rajma Chawal</h4>
+<div class="pills">
+<div class="pill">420 kcal</div>
+<div class="pill">16g protein</div>
+</div>
+<button class="btn" onclick="quickMeal('Rajma Chawal',420)">
+Quick Add
+</button>
+</div>
+</div>
+
+<div class="recipe">
+<img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=1200&auto=format&fit=crop">
+<div class="recipe-body">
+<h4>Poha</h4>
+<div class="pills">
+<div class="pill">280 kcal</div>
+<div class="pill">8g protein</div>
+</div>
+<button class="btn" onclick="quickMeal('Poha',280)">
+Quick Add
+</button>
+</div>
+</div>
+
+<div class="recipe">
+<img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=1200&auto=format&fit=crop">
+<div class="recipe-body">
+<h4>Paneer Bhurji</h4>
+<div class="pills">
+<div class="pill">350 kcal</div>
+<div class="pill">22g protein</div>
+</div>
+<button class="btn" onclick="quickMeal('Paneer Bhurji',350)">
+Quick Add
+</button>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- ACTIVITY -->
+
+<section class="section" id="activity">
+
+<div class="section-title">
+Workout Logger
+</div>
+
+<div class="row">
+
+<input class="input" id="workoutName" placeholder="Workout">
+
+<input class="input" id="workoutBurn" type="number" placeholder="Calories">
+
+</div>
+
+<button class="btn" onclick="addWorkout()">
+Save Workout
+</button>
+
+<div class="list" id="workoutList"></div>
+
+</section>
+
+<!-- ANALYTICS -->
+
+<section class="section" id="analytics">
+
+<div class="section-title">
+Calories Analytics
+</div>
+
+<canvas class="analytics" id="calChart" height="220"></canvas>
+
+<div class="section-title">
+Weight Analytics
+</div>
+
+<canvas class="analytics" id="weightChart" height="220"></canvas>
+
+</section>
+
+<!-- PROFILE -->
+
+<section class="section" id="profile">
+
+<input class="input" id="name" placeholder="Name">
+
+<div class="row">
+
+<input class="input" id="age" type="number" placeholder="Age">
+
+<select class="input" id="gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+</div>
+
+<div class="row">
+
+<input class="input" id="height" type="number" placeholder="Height cm">
+
+<input class="input" id="weight" type="number" placeholder="Weight kg">
+
+</div>
+
+<select class="input" id="goal">
+<option>Fat Loss</option>
+<option>Maintenance</option>
+<option>Muscle Gain</option>
+</select>
+
+<input class="input" id="targetWeight" type="number" placeholder="Target Weight">
+
+<input class="input" id="weeks" type="number" placeholder="Weeks to achieve goal">
+
+<button class="btn" onclick="saveProfile()">
+Save Profile
+</button>
+
+<div class="grid">
+
+<div class="card">
+<h3>BMI</h3>
+<div class="big" id="bmi">--</div>
+</div>
+
+<div class="card">
+<h3>Daily Calories</h3>
+<div class="big" id="dailyTarget">--</div>
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+<!-- NAV -->
+
+<div class="bottom-nav">
+
+<div class="nav active" data-page="dashboard">
+<div>Home</div>
+<div>Dashboard</div>
+</div>
+
+<div class="nav" data-page="nutrition">
+<div>Food</div>
+<div>Nutrition</div>
+</div>
+
+<div class="nav" data-page="activity">
+<div>Move</div>
+<div>Activity</div>
+</div>
+
+<div class="nav" data-page="analytics">
+<div>Stats</div>
+<div>Analytics</div>
+</div>
+
+<div class="nav" data-page="profile">
+<div>You</div>
+<div>Profile</div>
+</div>
+
+</div>
+
+<script>
+
+let state = JSON.parse(localStorage.getItem("pulse_os")) || {
+
+profile:null,
+food:[],
+workouts:[],
+water:0,
+sleep:0,
+steps:0,
+stepCalories:0,
+weights:[],
+streak:0,
+lastEnded:null
+
+};
+
+function save(){
+
+localStorage.setItem(
+"pulse_os",
+JSON.stringify(state)
+);
+
+render();
+
+}
+
+function calculateCalories(p){
+
+let bmr;
+
+if(p.gender==="Male"){
+
+bmr =
+10*p.weight +
+6.25*p.height -
+5*p.age + 5;
+
+}else{
+
+bmr =
+10*p.weight +
+6.25*p.height -
+5*p.age -161;
+
+}
+
+let difference =
+p.targetWeight - p.weight;
+
+let adjustment =
+(difference * 7700) /
+(p.weeks * 7);
+
+let total =
+Math.round(bmr + adjustment);
+
+if(total < 1200) total = 1200;
+
+return total;
+
+}
+
+function saveProfile(){
+
+let p = {
+
+name:document.getElementById("name").value,
+age:Number(document.getElementById("age").value),
+gender:document.getElementById("gender").value,
+height:Number(document.getElementById("height").value),
+weight:Number(document.getElementById("weight").value),
+goal:document.getElementById("goal").value,
+targetWeight:Number(document.getElementById("targetWeight").value),
+weeks:Number(document.getElementById("weeks").value)
+
+};
+
+if(
+!p.name ||
+!p.age ||
+!p.height ||
+!p.weight ||
+!p.targetWeight ||
+!p.weeks
+){
+alert("Complete all fields");
+return;
+}
+
+p.dailyCalories =
+calculateCalories(p);
+
+state.profile = p;
+
+if(state.weights.length===0){
+state.weights.push(p.weight);
+}
+
+save();
+
+}
+
+function totalFood(){
+
+return state.food.reduce(
+(a,b)=>a+b.calories,
+0
+);
+
+}
+
+function totalBurn(){
+
+let workout =
+state.workouts.reduce(
+(a,b)=>a+b.burn,
+0
+);
+
+return workout + state.stepCalories;
+
+}
+
+function addFood(){
+
+let name =
+document.getElementById("foodName").value;
+
+let calories =
+Number(document.getElementById("foodCal").value);
+
+let meal =
+document.getElementById("mealType").value;
+
+if(!name || !calories) return;
+
+state.food.push({
+name,
+calories,
+meal
+});
+
+document.getElementById("foodName").value='';
+document.getElementById("foodCal").value='';
+
+save();
+
+}
+
+function quickMeal(name,calories){
+
+state.food.push({
+name,
+calories,
+meal:"Quick Add"
+});
+
+save();
+
+}
+
+function addWorkout(){
+
+let name =
+document.getElementById("workoutName").value;
+
+let burn =
+Number(document.getElementById("workoutBurn").value);
+
+if(!name || !burn) return;
+
+state.workouts.push({
+name,
+burn
+});
+
+document.getElementById("workoutName").value='';
+document.getElementById("workoutBurn").value='';
+
+save();
+
+}
+
+function addWater(v){
+
+state.water += v;
+
+save();
+
+}
+
+function addSteps(){
+
+state.steps += 100;
+
+state.stepCalories += 4;
+
+save();
+
+}
+
+function saveSleep(){
+
+state.sleep =
+Number(document.getElementById("sleepInput").value);
+
+save();
+
+}
+
+function updateWeight(){
+
+if(!state.profile) return;
+
+let w =
+Number(document.getElementById("weightInput").value);
+
+if(!w) return;
+
+state.profile.weight = w;
+
+state.weights.push(w);
+
+save();
+
+}
+
+function endDay(){
+
+let ok =
+confirm("End current day?");
+
+if(!ok) return;
+
+let today =
+new Date().toDateString();
+
+if(state.lastEnded !== today){
+
+state.streak += 1;
+
+state.lastEnded = today;
+
+}
+
+state.food = [];
+state.workouts = [];
+state.water = 0;
+state.sleep = 0;
+state.steps = 0;
+state.stepCalories = 0;
+
+save();
+
+alert("Day completed");
+
+}
+
+document.querySelectorAll(".nav").forEach(btn=>{
+
+btn.onclick = ()=>{
+
+document.querySelectorAll(".nav")
+.forEach(n=>n.classList.remove("active"));
+
+btn.classList.add("active");
+
+document.querySelectorAll(".section")
+.forEach(s=>s.classList.remove("active"));
+
+document.getElementById(
+btn.dataset.page
+).classList.add("active");
+
+};
+
+});
+
+let ring;
+
+function renderRing(consumed,target){
+
+if(ring) ring.destroy();
+
+ring = new Chart(
+document.getElementById("ringChart"),
+{
+type:"doughnut",
+
+data:{
+datasets:[{
+data:[
+consumed,
+Math.max(target-consumed,1)
+],
+
+backgroundColor:[
+consumed>target
+? "#ff8f8f"
+: "#86d39f",
+"#232b37"
+],
+
+borderWidth:0,
+borderRadius:30
+}]
+},
+
+options:{
+cutout:"82%",
+plugins:{
+legend:{display:false}
+}
+}
+
+});
+
+}
+
+let calChart;
+let weightChart;
+
+function renderCharts(){
+
+if(calChart)
+calChart.destroy();
+
+calChart = new Chart(
+document.getElementById("calChart"),
+{
+type:"line",
+
+data:{
+labels:[
+"Mon","Tue","Wed",
+"Thu","Fri","Sat","Sun"
+],
+
+datasets:[{
+data:[
+1800,2100,1900,
+2200,2000,2300,
+totalFood()
+],
+borderColor:"#d8c2a3",
+tension:.45
+}]
+},
+
+options:{
+plugins:{
+legend:{display:false}
+},
+scales:{
+x:{
+ticks:{color:"#98a1af"},
+grid:{display:false}
+},
+y:{
+ticks:{color:"#98a1af"},
+grid:{color:"#232b37"}
+}
+}
+}
+
+});
+
+if(weightChart)
+weightChart.destroy();
+
+weightChart = new Chart(
+document.getElementById("weightChart"),
+{
+type:"line",
+
+data:{
+labels:
+state.weights.map((_,i)=>"W"+(i+1)),
+
+datasets:[{
+data:state.weights,
+borderColor:"#91b7ff",
+tension:.45
+}]
+},
+
+options:{
+plugins:{
+legend:{display:false}
+},
+scales:{
+x:{
+ticks:{color:"#98a1af"},
+grid:{display:false}
+},
+y:{
+ticks:{color:"#98a1af"},
+grid:{color:"#232b37"}
+}
+}
+}
+
+});
+
+}
+
+function render(){
+
+if(state.profile){
+
+document.getElementById("welcome")
+.innerText = state.profile.name;
+
+document.getElementById("avatar")
+.innerText =
+state.profile.name[0].toUpperCase();
+
+document.getElementById("goalText")
+.innerText =
+`${state.profile.goal} • ${state.profile.targetWeight}kg target`;
+
+document.getElementById("goalCals")
+.innerText =
+state.profile.dailyCalories;
+
+document.getElementById("foodCals")
+.innerText =
+totalFood();
+
+document.getElementById("burnCals")
+.innerText =
+totalBurn();
+
+document.getElementById("weightText")
+.innerText =
+state.profile.weight;
+
+document.getElementById("dailyTarget")
+.innerText =
+state.profile.dailyCalories;
+
+let bmi = (
+state.profile.weight /
+((state.profile.height/100)**2)
+).toFixed(1);
+
+document.getElementById("bmi")
+.innerText = bmi;
+
+let remaining =
+state.profile.dailyCalories -
+totalFood() +
+totalBurn();
+
+document.getElementById("remainingText")
+.innerText =
+remaining + " kcal remaining";
+
+renderRing(
+totalFood(),
+state.profile.dailyCalories
+);
+
+}else{
+
+renderRing(0,1);
+
+}
+
+document.getElementById("waterText")
+.innerText = state.water;
+
+document.getElementById("stepsText")
+.innerText = state.steps;
+
+document.getElementById("stepBurn")
+.innerText = state.stepCalories;
+
+document.getElementById("sleepText")
+.innerText = state.sleep;
+
+document.getElementById("streakVal")
+.innerText = state.streak;
+
+document.getElementById("ringValue")
+.innerText = totalFood();
+
+let fill =
+Math.min(
+(state.water/3000)*100,
+100
+);
+
+document.getElementById("waterFill")
+.style.width = fill + "%";
+
+let foodList =
+document.getElementById("foodList");
+
+foodList.innerHTML='';
+
+if(state.food.length===0){
+
+foodList.innerHTML =
+'<div class="empty">No meals added</div>';
+
+}
+
+state.food.slice().reverse()
+.forEach(f=>{
+
+foodList.innerHTML += `
+<div class="item">
+<div>
+<b>${f.name}</b>
+<br>
+<small>${f.meal}</small>
+</div>
+<div>${f.calories} kcal</div>
+</div>
+`;
+
+});
+
+let workoutList =
+document.getElementById("workoutList");
+
+workoutList.innerHTML='';
+
+if(state.workouts.length===0){
+
+workoutList.innerHTML =
+'<div class="empty">No workouts logged</div>';
+
+}
+
+state.workouts.slice().reverse()
+.forEach(w=>{
+
+workoutList.innerHTML += `
+<div class="item">
+<div>
+<b>${w.name}</b>
+</div>
+<div>${w.burn} kcal</div>
+</div>
+`;
+
+});
+
+renderCharts();
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
